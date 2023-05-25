@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/routes/app_routes.dart';
@@ -7,23 +7,27 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   if (Platform.isWindows) {
-    // WidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
     // // Must add this line.
-    // await windowManager.ensureInitialized();
+    await windowManager.ensureInitialized();
 
-    // WindowOptions windowOptions = WindowOptions(
-    //   size: Size(1920, 1080),
-    //   center: true,
-    //   backgroundColor: Colors.transparent,
-    //   skipTaskbar: false,
-    //   titleBarStyle: TitleBarStyle.hidden,
-    // );
-    // windowManager.waitUntilReadyToShow(windowOptions, () async {
-    //   await windowManager.show();
-    //   await windowManager.focus();
-    // });
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(1920, 1080),
+      minimumSize: Size(800, 600),
+      center: true,
+      title: 'Punjab Super',
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +37,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'Punjab Super',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
