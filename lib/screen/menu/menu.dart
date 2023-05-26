@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:punjabsuper/screen/menu/recievables.dart';
+import 'package:punjabsuper/screen/menu/transferables.dart';
 
 import '../../utils/image_constants.dart';
 
-class Menu extends StatelessWidget {
-  Menu({
+class Menu extends StatefulWidget {
+  const Menu({
     super.key,
   });
+
+  @override
+  State<Menu> createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+  var isBasicMouseCursor = true;
+  void changeMouseCursor() {
+    setState(() {
+      isBasicMouseCursor = !isBasicMouseCursor;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,127 +29,183 @@ class Menu extends StatelessWidget {
         builder: (context, constrainst) {
           var height = constrainst.maxHeight;
           var width = constrainst.maxWidth;
-          return Stack(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Image.asset(
-                  ImageConstants.menuImg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: height * 0.02,
-                  left: width * 0.15,
-                ),
-                child: const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'PS00202032',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          return
+              // MouseRegion(
+              //   cursor: isBasicMouseCursor
+              //       ? SystemMouseCursors.basic
+              //       : SystemMouseCursors.click,
+              //   onHover: (PointerEvent event) {
+              //     Offset localPosition = event.localPosition;
+              //     var x = localPosition.dx;
+              //     var y = localPosition.dy;
+              //     var xPercentage = (x / width) * 100;
+              //     var yPercentage = (y / height) * 100;
+              //     print('$xPercentage $yPercentage');
+              //     if (xPercentage > 20 &&
+              //         xPercentage < 40 &&
+              //         yPercentage > 82 &&
+              //         yPercentage < 94) {
+              //       changeMouseCursor();
+              //     }
+              //   },
+              //   child:
+              InkWell(
+            mouseCursor: isBasicMouseCursor
+                ? SystemMouseCursors.basic
+                : SystemMouseCursors.click,
+            onTapDown: (TapDownDetails details) {
+              Offset postion = details.globalPosition;
+              var x = postion.dx;
+              var y = postion.dy;
+              var xPercentage = (x / width) * 100;
+              var yPercentage = (y / height) * 100;
+
+              //Select All Recievable minX = 26 minY = 86 maxX = 35 maxY = 90
+              if (xPercentage > 26 &&
+                  xPercentage < 35 &&
+                  yPercentage > 86 &&
+                  yPercentage < 90) {
+                // changeMouseCursor();
+                showToast(
+                  'Clicked On Recievables',
+                  context: context,
+                );
+                print('$xPercentage $yPercentage');
+              }
+
+              // Check for Transferables
+              // Recievable reciev reject
+              // Transferable reject
+            },
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Image.asset(
+                    ImageConstants.menuImg,
+                    fit: BoxFit.fill,
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(top: height * 0.02, right: width * 0.1),
-                child: const Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    '937.00',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.white),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: height * 0.02,
+                    left: width * 0.15,
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: height * 0.065,
-                  right: 0,
-                ),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    width: 400,
-                    height: 350,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 0.0,
-                                top: 0,
-                              ),
-                              child: SizedBox(
-                                width: 160,
-                                height: 150,
-                                child: Image.asset(
-                                  ImageConstants.pattiImg,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                            Column(
-                              children: [],
-                            )
-                          ],
-                        )
-                      ],
+                  child: const Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'PS00202032',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: width * 0.08, bottom: height * 0.2),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    width: width * 0.4,
-                    height: 100,
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      child: DataTable(dataRowHeight: 20, columns: const [
-                        DataColumn(label: Text('Account No')),
-                        DataColumn(label: Text('Amount')),
-                        DataColumn(label: Text('Type')),
-                      ], rows: const [
-                        DataRow(cells: [
-                          DataCell(Text('PS002020232')),
-                          DataCell(Text('2')),
-                          DataCell(Text('G')),
-                        ]),
-                      ]),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: height * 0.02, right: width * 0.1),
+                  child: const Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      '937.00',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(right: width * 0.07, bottom: height * 0.2),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    width: width * 0.35,
-                    height: 100,
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      child: DataTable(dataRowHeight: 20, columns: const [
-                        DataColumn(label: Text('To Account No')),
-                        DataColumn(label: Text('Amount')),
-                        DataColumn(label: Text('Type')),
-                      ], rows: const []),
-                    ),
+                // Images for Navigation:
+                Positioned(
+                  right: width * 0.18,
+                  top: height * 0.08,
+                  child: Image.asset(
+                    width: width * 0.11,
+                    height: height * 0.2,
+                    ImageConstants.pattiImg,
+                    fit: BoxFit.fill,
                   ),
                 ),
-              )
-            ],
+                Positioned(
+                  right: width * 0.18,
+                  top: height * 0.295,
+                  child: Image.asset(
+                    width: width * 0.11,
+                    height: height * 0.201,
+                    ImageConstants.luckyImg,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                Positioned(
+                  right: width * 0.07,
+                  top: height * 0.08,
+                  child: Image.asset(
+                    width: width * 0.09,
+                    height: height * 0.09,
+                    ImageConstants.tokenIdImg,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                Positioned(
+                  right: width * 0.07,
+                  top: height * 0.19,
+                  child: Image.asset(
+                    width: width * 0.09,
+                    height: height * 0.09,
+                    ImageConstants.reportImg,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                Positioned(
+                  right: width * 0.062,
+                  top: height * 0.3,
+                  child: Image.asset(
+                    width: width * 0.11,
+                    height: height * 0.09,
+                    ImageConstants.winnerImg,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                Positioned(
+                  right: width * 0.062,
+                  top: height * 0.41,
+                  child: Image.asset(
+                    width: width * 0.11,
+                    height: height * 0.09,
+                    ImageConstants.reportImg,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+
+                // End ------------ //
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: width * 0.08,
+                    bottom: height * 0.19,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Recievables(),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: width * 0.07,
+                    bottom: height * 0.19,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Transferables(),
+                  ),
+                )
+              ],
+            ),
           );
+          // );
         },
       ),
     );
