@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'menu_controller/menu_controller.dart' as M;
 
@@ -29,7 +28,7 @@ class Recievables extends StatelessWidget {
             width: 2,
             style: BorderStyle.solid,
           ),
-          headingTextStyle: GoogleFonts.openSans(
+          headingTextStyle: const TextStyle(
             fontSize: 16,
             color: Colors.black,
             fontWeight: FontWeight.bold,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:get/get.dart';
 import 'package:punjabsuper/screen/menu/recievables.dart';
 import 'package:punjabsuper/screen/menu/transferables.dart';
 
+import '../../routes/app_routes.dart';
 import '../../utils/image_constants.dart';
 
 class Menu extends StatefulWidget {
@@ -16,6 +18,7 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   var isBasicMouseCursor = true;
+  bool isLuckyPattaHovered = false;
   void changeMouseCursor() {
     setState(() {
       isBasicMouseCursor = !isBasicMouseCursor;
@@ -119,11 +122,16 @@ class _MenuState extends State<Menu> {
                 Positioned(
                   right: width * 0.18,
                   top: height * 0.08,
-                  child: Image.asset(
-                    width: width * 0.11,
-                    height: height * 0.2,
-                    ImageConstants.pattiImg,
-                    fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.luckyPatta);
+                    },
+                    child: Image.asset(
+                      width: width * 0.11,
+                      height: height * 0.2,
+                      ImageConstants.pattiImg,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
                 Positioned(
