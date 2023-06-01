@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 
 class AnalogClock extends StatefulWidget {
   final ratio;
+  final height;
+  final width;
   AnalogClock({
     super.key,
     this.ratio = 0.0,
+    this.height,
+    this.width,
   });
   @override
   _AnalogClockState createState() => _AnalogClockState();
@@ -40,6 +44,8 @@ class _AnalogClockState extends State<AnalogClock> {
       painter: ClockPainter(
         currentTime: _currentTime ?? DateTime.now(),
         ratio: widget.ratio,
+        height: widget.height,
+        width: widget.width,
       ),
     );
   }
@@ -48,17 +54,21 @@ class _AnalogClockState extends State<AnalogClock> {
 class ClockPainter extends CustomPainter {
   DateTime currentTime;
   final ratio;
+  final height;
+  final width;
 
   ClockPainter({
     required this.currentTime,
     this.ratio,
+    this.height,
+    this.width,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     var clockSize = ratio * 45;
-    final double centerX = clockSize;
-    final double centerY = clockSize;
+    final double centerX = width * 0.15;
+    final double centerY = height * 0.15;
     final double radius = min(centerX, centerY);
 
     // final paintCircle = Paint()
@@ -81,7 +91,7 @@ class ClockPainter extends CustomPainter {
     // );
     canvas.drawCircle(
       Offset(centerX, centerY),
-      8,
+      ratio * 5,
       paintCenter,
     );
 
@@ -100,14 +110,20 @@ class ClockPainter extends CustomPainter {
     final double minuteY =
         centerY + radius * 0.45 * sin(currentTime.minute * 6 * pi / 180);
     canvas.drawLine(
-        Offset(centerX, centerY), Offset(minuteX, minuteY), paintLine);
+      Offset(centerX, centerY),
+      Offset(minuteX, minuteY),
+      paintLine,
+    );
 
     final double secondX =
         centerX + radius * 0.48 * cos(currentTime.second * 6 * pi / 180);
     final double secondY =
         centerY + radius * 0.48 * sin(currentTime.second * 6 * pi / 180);
     canvas.drawLine(
-        Offset(centerX, centerY), Offset(secondX, secondY), paintLine);
+      Offset(centerX, centerY),
+      Offset(secondX, secondY),
+      paintLine,
+    );
   }
 
   @override

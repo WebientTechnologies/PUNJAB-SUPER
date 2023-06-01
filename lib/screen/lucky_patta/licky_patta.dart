@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/widgets/analog_clock.dart';
@@ -5,15 +7,27 @@ import 'package:punjabsuper/widgets/counter.dart';
 import 'package:punjabsuper/widgets/date.dart';
 
 class LuckyPatt extends StatelessWidget {
-  const LuckyPatt({super.key});
+  LuckyPatt({super.key});
+
+  final Random random = Random();
 
   @override
   Widget build(BuildContext context) {
+    int n = random.nextInt(14);
+    String cardImage = n < 10 ? 'assets/Taash/0$n.png' : 'assets/Taash/$n.png';
+    List<String> cardPathList = [];
+    for (var i = 0; i < 5; i++) {
+      int n = random.nextInt(12);
+      String cardImage =
+          n < 10 ? 'assets/OpenNoShow/0$n.png' : 'assets/OpenNoShow/$n.png';
+      cardPathList.add(cardImage);
+    }
     return Scaffold(
       body: LayoutBuilder(
         builder: (ctx, contrainsts) {
           var width = contrainsts.maxWidth;
           var height = contrainsts.maxHeight;
+          // var ratio = width >= height ? width / height : height / width;
           var ratio = width / height;
           return Stack(
             children: [
@@ -41,10 +55,12 @@ class LuckyPatt extends StatelessWidget {
               ),
               // Analog Clock:
               Positioned(
-                top: height * 0.14,
-                left: width * 0.015,
+                top: height * 0.1,
+                left: width * -0.073,
                 child: AnalogClock(
                   ratio: ratio,
+                  height: height,
+                  width: width,
                 ),
               ),
               // Counter :
@@ -55,6 +71,11 @@ class LuckyPatt extends StatelessWidget {
                   startMinutes: 0,
                   startSeconds: 20,
                   ratio: ratio,
+                  style: TextStyle(
+                    fontSize: ratio * 8,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
 
@@ -119,6 +140,51 @@ class LuckyPatt extends StatelessWidget {
                   'assets/img/Cancel-Bet.png',
                   height: height * 0.07,
                   width: width * 0.1,
+                ),
+              ),
+
+              // Bottom Right Card:
+              Positioned(
+                bottom: height * 0.1,
+                right: width * 0.02,
+                child: Image.asset(
+                  cardImage,
+                  height: height * 0.2,
+                  width: width * 0.1,
+                  fit: BoxFit.contain,
+                ),
+              ),
+
+              // Bottom five Cards:
+              Positioned(
+                bottom: height * 0.0,
+                right: width * 0.15,
+                child: Row(
+                  children: List.generate(cardPathList.length, (index) {
+                    return Image.asset(
+                      cardPathList[index],
+                      height: height * 0.08,
+                      width: width * 0.035,
+                      fit: BoxFit.fill,
+                    );
+                  }),
+                ),
+              ),
+
+              // Exit
+              Positioned(
+                bottom: height * 0.0,
+                right: width * 0.0,
+                child: InkWell(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Image.asset(
+                    'assets/img/exit.png',
+                    height: height * 0.07,
+                    width: width * 0.13,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
 

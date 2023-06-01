@@ -118,7 +118,7 @@ class _MenuState extends State<Menu> {
                     ),
                   ),
                 ),
-                // Images for Navigation:
+                // Lucky Patti:
                 Positioned(
                   right: width * 0.18,
                   top: height * 0.08,
@@ -134,14 +134,20 @@ class _MenuState extends State<Menu> {
                     ),
                   ),
                 ),
+                // Lucky 100 PS
                 Positioned(
                   right: width * 0.18,
                   top: height * 0.295,
-                  child: Image.asset(
-                    width: width * 0.11,
-                    height: height * 0.201,
-                    ImageConstants.luckyImg,
-                    fit: BoxFit.fill,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.lucky100PS);
+                    },
+                    child: Image.asset(
+                      width: width * 0.11,
+                      height: height * 0.201,
+                      ImageConstants.luckyImg,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
 

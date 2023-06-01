@@ -6,11 +6,17 @@ class Counter extends StatefulWidget {
   int startMinutes = 1;
   int startSeconds = 0;
   double ratio = 0.0;
+  final TextStyle style;
   Counter({
     super.key,
     this.startMinutes = 1,
     this.startSeconds = 0,
     this.ratio = 0.0,
+    this.style = const TextStyle(
+      color: Colors.black,
+      fontSize: 12,
+      fontWeight: FontWeight.bold,
+    ),
   });
 
   @override
@@ -70,11 +76,7 @@ class _CounterState extends State<Counter> {
         startSecond = snapshots.data?[1] ?? 0;
         return Text(
           '${startMinute < 10 ? '0$startMinute' : startMinute}:${startSecond < 10 ? '0$startSecond' : startSecond}',
-          style: TextStyle(
-            fontSize: widget.ratio * 8,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
+          style: widget.style,
         );
       },
     );
