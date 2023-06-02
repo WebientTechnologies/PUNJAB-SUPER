@@ -9,4 +9,8 @@ class ImageConstants {
   static String reportImg = '${base}Report.png';
   static String tokenIdImg = '${base}Tokonid.png';
   static String winnerImg = '${base}winner.png';
+  static String settingImg = '${base}Setting.PNG';
+  static String recieveImg = '${base}recieve.PNG';
+  static String rejectImg = '${base}reject.PNG';
+  static String logoutImg = '${base}logout.PNG';
 }
