@@ -108,7 +108,8 @@ class _LuckyPattState extends State<LuckyPatt> {
               onTap: () {
                 var percentX = x / width;
                 var percentY = y / height;
-                // print('percentX: $percentX, percentY: $percentY');
+                // print('percentX: $percentX
+                //, percentY: $percentY');
 
                 //  ###########  FOR GETTING NUMBERS ########### //
                 if ((percentX >= 0.50 && percentX <= 0.57) &&

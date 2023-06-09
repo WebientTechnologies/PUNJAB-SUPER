@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/screen/lucky100PS/widgets/radio_buttons.dart';
 
@@ -132,6 +133,35 @@ class _DialogWidgetState extends State<DialogWidget> {
     });
   }
 
+  void calculateCombineMaker() {
+    if (valueA.isNotEmpty) {
+      var temp = valueA.split('');
+      var combinations = [];
+      for (var i = 0; i < temp.length; i++) {
+        for (var j = 0; j < temp.length; j++) {
+          combinations.add(temp[i] + temp[j]);
+        }
+      }
+      // showToast(combinations.toString());
+      print(combinations);
+    }
+  }
+
+  void calculateJodiMakers() {
+    if (valueA.isNotEmpty && valueB.isNotEmpty) {
+      var temp = valueA.split('');
+      var temp1 = valueB.split('');
+      var combinations = [];
+      for (var i = 0; i < temp.length; i++) {
+        for (var j = 0; j < temp1.length; j++) {
+          combinations.add(temp[i] + temp1[j]);
+        }
+      }
+      // showToast(combinations.toString());
+      print(combinations);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = widget.height;
@@ -204,7 +234,7 @@ class _DialogWidgetState extends State<DialogWidget> {
               button(
                 'Calculate',
                 1,
-                null,
+                jodiMaker ? calculateJodiMakers : calculateCombineMaker,
               ),
               const SizedBox(
                 width: 20,
