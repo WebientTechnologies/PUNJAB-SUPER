@@ -20,8 +20,8 @@ class _Lucky100PSState extends State<Lucky100PS> {
     int row = 0,
     int column = 0,
     int number = -1,
-    double percentX = 0.0,
-    double percentY = 0.0,
+    double rowConstant = 0.0,
+    double columnConstant = 0.0,
     double height = 0.0,
     double width = 0.0,
     double ratio = 0.0,
@@ -29,16 +29,11 @@ class _Lucky100PSState extends State<Lucky100PS> {
     if (number == -1) {
       return const SizedBox.shrink();
     }
-
-    var rowConstant = height * 0.08;
-    var columnConstant = width * 0.025;
     // print('row is $row and column is $column and row Conts is $rowConstant');
 
     return Positioned(
-      left: column * columnConstant + column * 4,
-      top: row < 4
-          ? row * rowConstant - row * 2 - row
-          : row * rowConstant - row * 3.5 - row,
+      left: width * rowConstant,
+      top: height * columnConstant,
       child: CircleAvatar(
         radius: ratio * 15,
       ),
@@ -71,7 +66,11 @@ class _Lucky100PSState extends State<Lucky100PS> {
             percentY = y / height;
           },
           child: InkWell(
+            // onTapDown: (details) {
+            //   print('Position is ${details.localPosition}');
+            // },
             onTap: () {
+              // 01 : 0.013 and 0.086
               print('Position is $percentX and $percentY');
             },
             child: Stack(
@@ -98,6 +97,17 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 //     ratio: ratio,
                 //   ),
                 // ),
+                shadeNumber(
+                  row: 1,
+                  column: 1,
+                  number: 1,
+                  rowConstant: 0.0175,
+                  columnConstant: 0.086,
+                  height: height,
+                  width: width,
+                  ratio: ratio,
+                ),
+
                 // Score :
                 Positioned(
                   top: height * 0.05,
