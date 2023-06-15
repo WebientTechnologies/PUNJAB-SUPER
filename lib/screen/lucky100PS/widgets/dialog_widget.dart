@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/screen/lucky100PS/widgets/radio_buttons.dart';
 
@@ -7,11 +6,17 @@ class DialogWidget extends StatefulWidget {
   final height;
   final width;
   final ratio;
+  final calculateCombineMaker;
+  final calculateJodiMakers;
+  final showCMJMDialog;
   const DialogWidget({
     super.key,
     this.height,
     this.width,
     this.ratio,
+    this.calculateCombineMaker,
+    this.calculateJodiMakers,
+    this.showCMJMDialog,
   });
 
   @override
@@ -94,9 +99,17 @@ class _DialogWidgetState extends State<DialogWidget> {
     );
   }
 
-  Widget button(String label, int index, onPressed) {
+  Widget button(String label, int index) {
     return InkWell(
-      onTap: onPressed,
+      onTap: () {
+        if (index == 1) {
+          jodiMaker
+              ? widget.calculateJodiMakers(valueA, valueB, points)
+              : widget.calculateCombineMaker(valueA, points);
+        } else {
+          widget.showCMJMDialog(false);
+        }
+      },
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -133,35 +146,6 @@ class _DialogWidgetState extends State<DialogWidget> {
     });
   }
 
-  void calculateCombineMaker() {
-    if (valueA.isNotEmpty) {
-      var temp = valueA.split('');
-      var combinations = [];
-      for (var i = 0; i < temp.length; i++) {
-        for (var j = 0; j < temp.length; j++) {
-          combinations.add(temp[i] + temp[j]);
-        }
-      }
-      // showToast(combinations.toString());
-      print(combinations);
-    }
-  }
-
-  void calculateJodiMakers() {
-    if (valueA.isNotEmpty && valueB.isNotEmpty) {
-      var temp = valueA.split('');
-      var temp1 = valueB.split('');
-      var combinations = [];
-      for (var i = 0; i < temp.length; i++) {
-        for (var j = 0; j < temp1.length; j++) {
-          combinations.add(temp[i] + temp1[j]);
-        }
-      }
-      // showToast(combinations.toString());
-      print(combinations);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var height = widget.height;
@@ -177,74 +161,76 @@ class _DialogWidgetState extends State<DialogWidget> {
         86,
         60,
       ),
-      child: Column(
-        children: [
-          // Radio Buttons
-          RadioButton(
-            changeSelected: changeSelected,
-            combinedMaker: combineMaker,
-            jodiMaker: jodiMaker,
-            selected: selected,
-            style: style,
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Radio Buttons
+            RadioButton(
+              changeSelected: changeSelected,
+              combinedMaker: combineMaker,
+              jodiMaker: jodiMaker,
+              selected: selected,
+              style: style,
+            ),
 
-          const SizedBox(
-            height: 20,
-          ),
-          // TextFields
-          Row(
-            children: [
-              textField(
-                'VALUE A',
-                0,
-                valueA,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              if (jodiMaker)
+            const SizedBox(
+              height: 20,
+            ),
+            // TextFields
+            Row(
+              children: [
                 textField(
-                  'VALUE B',
-                  1,
-                  valueB,
-                )
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          // Points
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              textField(
-                'POINTS',
-                2,
-                points,
-              ),
-            ],
-          ),
+                  'VALUE A',
+                  0,
+                  valueA,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                if (jodiMaker)
+                  textField(
+                    'VALUE B',
+                    1,
+                    valueB,
+                  )
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            // Points
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                textField(
+                  'POINTS',
+                  2,
+                  points,
+                ),
+              ],
+            ),
 
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              button(
-                'Calculate',
-                1,
-                jodiMaker ? calculateJodiMakers : calculateCombineMaker,
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              button('Close', 2, () {
-                Get.back();
-              }),
-            ],
-          ),
-        ],
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                button(
+                  'Calculate',
+                  1,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                button(
+                  'Close',
+                  2,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
