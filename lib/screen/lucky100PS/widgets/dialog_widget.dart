@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:punjabsuper/screen/lucky100PS/widgets/radio_buttons.dart';
 
 class DialogWidget extends StatefulWidget {
@@ -9,6 +8,8 @@ class DialogWidget extends StatefulWidget {
   final calculateCombineMaker;
   final calculateJodiMakers;
   final showCMJMDialog;
+  final totalNumbers;
+  final totalValue;
   const DialogWidget({
     super.key,
     this.height,
@@ -17,6 +18,8 @@ class DialogWidget extends StatefulWidget {
     this.calculateCombineMaker,
     this.calculateJodiMakers,
     this.showCMJMDialog,
+    this.totalNumbers,
+    this.totalValue,
   });
 
   @override
@@ -227,6 +230,36 @@ class _DialogWidgetState extends State<DialogWidget> {
                   'Close',
                   2,
                 ),
+              ],
+            ),
+
+            const SizedBox(
+              height: 20,
+            ),
+
+            // Points and Value
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total NO :   ${widget.totalNumbers}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '${widget.totalValue}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  width: widget.width * 0.1,
+                )
               ],
             ),
           ],

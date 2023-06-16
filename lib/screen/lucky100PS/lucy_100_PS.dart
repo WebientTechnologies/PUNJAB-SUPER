@@ -17,6 +17,11 @@ class _Lucky100PSState extends State<Lucky100PS> {
   final Random random = Random();
   List<String> combinations = [];
   double scaleFactor = 0.001;
+  int value = 0;
+  String points = '-1';
+  int totalNumbers = 0;
+  int totalValue = 0;
+  String pressedNumber = '';
 
   Map coordinates = {
     // First Row:
@@ -176,7 +181,13 @@ class _Lucky100PSState extends State<Lucky100PS> {
         }
       }
       // showToast(combinations.toString());
-      print(combinations);
+      // print(combinations);
+      if (points.isEmpty) {
+        points = '1';
+      }
+      this.points = points;
+      totalNumbers = combinations.length;
+      totalValue = int.parse(points) * totalNumbers;
       setState(() {});
     }
   }
@@ -192,7 +203,14 @@ class _Lucky100PSState extends State<Lucky100PS> {
         }
       }
       // showToast(combinations.toString());
-      print(combinations);
+      if (points.isEmpty) {
+        points = '1';
+      }
+      // print(combinations);
+      this.points = points;
+      totalNumbers = combinations.length;
+      totalValue = int.parse(points) * totalNumbers;
+
       setState(() {});
     }
   }
@@ -222,11 +240,12 @@ class _Lucky100PSState extends State<Lucky100PS> {
       top: height * columnConstant,
       child: CircleAvatar(
         radius: ratio * 17,
-        backgroundImage: Image.asset(
-          'assets/img/blank.png',
-        ).image,
+        backgroundColor: const Color.fromARGB(255, 222, 95, 21),
+        // backgroundImage: Image.asset(
+        //   'assets/img/blank.png',
+        // ).image,
         child: Text(
-          '1',
+          points,
           style: TextStyle(
             color: Colors.black,
             fontSize: ratio * 15,
@@ -270,6 +289,29 @@ class _Lucky100PSState extends State<Lucky100PS> {
             onTap: () {
               // 01 : 0.013 and 0.086
               print('Position is $percentX and $percentY');
+              var selectedKeys = [];
+
+              coordinates.forEach((key, value) {
+                if (percentX > value['x'] + 0.013 &&
+                    percentX < value['x'] + 0.086 &&
+                    percentY > value['y'] + 0.013 &&
+                    percentY < value['y'] + 0.086) {
+                  // print('Key is $key');
+                  // if (combinations.contains(key)) {
+                  //   combinations.remove(key);
+                  // } else {
+                  //   combinations.add(key);
+                  // }
+                  // setState(() {});
+                  selectedKeys.add(key);
+                }
+              });
+              if (selectedKeys.isNotEmpty) {
+                pressedNumber = selectedKeys.last;
+              }
+              print('Pressed Number is $pressedNumber');
+              combinations.add(pressedNumber);
+              setState(() {});
             },
             child: Stack(
               children: [
@@ -448,12 +490,26 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.34,
                   right: width * 0.225,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin1Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      // hoverColor: Colors.amber,
+                      onTap: () {
+                        setState(() {
+                          value = 1;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin1Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -461,12 +517,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.34,
                   right: width * 0.15,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin5Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 5;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin5Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -474,12 +543,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.34,
                   right: width * 0.08,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin10Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 10;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin10Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -487,12 +569,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.34,
                   right: width * 0.01,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin50Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 50;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin50Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -500,12 +595,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.23,
                   right: width * 0.22,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin100Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 100;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin100Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -513,24 +621,50 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.23,
                   right: width * 0.15,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin500Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 500;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin500Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
                 // Coin 1000
                 Positioned(
                   bottom: height * 0.23,
                   right: width * 0.08,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin1000Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 1000;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin1000Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -538,12 +672,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 Positioned(
                   bottom: height * 0.23,
                   right: width * 0.01,
-                  child: CircleAvatar(
-                    radius: ratio * 26,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: Image.asset(
-                      'assets/img/Coin5000Glow.jpg',
-                    ).image,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(100),
+                    elevation: 20,
+                    shadowColor: Colors.white,
+                    color: Colors.black,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          value = 5000;
+                        });
+                      },
+                      child: CircleAvatar(
+                        radius: ratio * 26,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: Image.asset(
+                          'assets/img/Coin5000Glow.jpg',
+                        ).image,
+                      ),
+                    ),
                   ),
                 ),
 
@@ -582,9 +729,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                         calculateCombineMaker: calculateCombineMaker,
                         calculateJodiMakers: calculateJodiMakers,
                         showCMJMDialog: showCMJMDialog,
+                        totalNumbers: totalNumbers,
+                        totalValue: totalValue,
                       ),
                     ),
                   ),
+
+                // Showing total value at bottom left:
+
+                Positioned(
+                    bottom: height * 0.015,
+                    left: width * 0.03,
+                    child: Text(
+                      totalValue.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ))
               ],
             ),
           ),
