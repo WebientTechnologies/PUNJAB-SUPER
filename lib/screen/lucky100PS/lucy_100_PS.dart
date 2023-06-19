@@ -223,14 +223,14 @@ class _Lucky100PSState extends State<Lucky100PS> {
 
   // Widget Functions
   Widget shadeNumber({
-    int number = -1,
+    String number = '-1',
     double rowConstant = 0.0,
     double columnConstant = 0.0,
     double height = 0.0,
     double width = 0.0,
     double ratio = 0.0,
   }) {
-    if (number == -1) {
+    if (number == '-1') {
       return const SizedBox.shrink();
     }
     // print('row is $row and column is $column and row Conts is $rowConstant');
@@ -244,12 +244,14 @@ class _Lucky100PSState extends State<Lucky100PS> {
         // backgroundImage: Image.asset(
         //   'assets/img/blank.png',
         // ).image,
-        child: Text(
-          points,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: ratio * 15,
-            fontWeight: FontWeight.bold,
+        child: FittedBox(
+          child: Text(
+            points,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: ratio * 15,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -283,26 +285,16 @@ class _Lucky100PSState extends State<Lucky100PS> {
             percentY = y / height;
           },
           child: InkWell(
-            // onTapDown: (details) {
-            //   print('Position is ${details.localPosition}');
-            // },
             onTap: () {
               // 01 : 0.013 and 0.086
               print('Position is $percentX and $percentY');
               var selectedKeys = [];
 
               coordinates.forEach((key, value) {
-                if (percentX > value['x'] + 0.013 &&
+                if (percentX > value['x'] &&
                     percentX < value['x'] + 0.086 &&
-                    percentY > value['y'] + 0.013 &&
+                    percentY > value['y'] &&
                     percentY < value['y'] + 0.086) {
-                  // print('Key is $key');
-                  // if (combinations.contains(key)) {
-                  //   combinations.remove(key);
-                  // } else {
-                  //   combinations.add(key);
-                  // }
-                  // setState(() {});
                   selectedKeys.add(key);
                 }
               });
@@ -327,7 +319,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                 ...combinations
                     .map(
                       (e) => shadeNumber(
-                        number: int.parse(e),
+                        number: e,
                         rowConstant: coordinates[e]['x'],
                         columnConstant: coordinates[e]['y'],
                         height: height,
@@ -499,7 +491,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                       // hoverColor: Colors.amber,
                       onTap: () {
                         setState(() {
-                          value = 1;
+                          points = '1';
                         });
                       },
                       child: CircleAvatar(
@@ -525,7 +517,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 5;
+                          points = '5';
                         });
                       },
                       child: CircleAvatar(
@@ -551,7 +543,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 10;
+                          points = '10';
                         });
                       },
                       child: CircleAvatar(
@@ -577,7 +569,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 50;
+                          points = '50';
                         });
                       },
                       child: CircleAvatar(
@@ -603,7 +595,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 100;
+                          points = '100';
                         });
                       },
                       child: CircleAvatar(
@@ -629,7 +621,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 500;
+                          points = '500';
                         });
                       },
                       child: CircleAvatar(
@@ -654,7 +646,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 1000;
+                          points = '1000';
                         });
                       },
                       child: CircleAvatar(
@@ -680,7 +672,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          value = 5000;
+                          points = '5000';
                         });
                       },
                       child: CircleAvatar(

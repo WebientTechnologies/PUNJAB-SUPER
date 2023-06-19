@@ -45,9 +45,18 @@ class _CounterState extends State<Counter> {
         } else {
           startSecond--;
         }
-        _streamController.sink.add([startMinute, startSecond]);
+        if (mounted) {
+          _streamController.sink.add([startMinute, startSecond]);
+        }
       },
     );
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   @override

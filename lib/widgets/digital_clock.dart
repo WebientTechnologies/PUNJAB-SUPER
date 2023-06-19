@@ -37,6 +37,13 @@ class _DigitalClockState extends State<DigitalClock> {
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Text(
       _timeString == null ? '' : '$_timeString',

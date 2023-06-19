@@ -39,6 +39,13 @@ class _AnalogClockState extends State<AnalogClock> {
   }
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: ClockPainter(
