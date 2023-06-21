@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/routes/app_routes.dart';
+import 'package:punjabsuper/utils/check_env.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -42,7 +42,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: AppRoutes.login,
+      initialRoute:
+          isRunningOnMobile() ? AppRoutes.mobileLogin : AppRoutes.login,
       getPages: AppRoutes.pages,
     );
   }

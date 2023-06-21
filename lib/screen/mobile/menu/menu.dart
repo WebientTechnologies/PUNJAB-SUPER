@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/screen/menu/recievables.dart';
-import 'package:punjabsuper/screen/menu/transferables.dart';
-import 'package:punjabsuper/screen/menu/widgets/setting_dialog.dart';
-import 'package:punjabsuper/screen/menu/widgets/token-id_report.dart';
+import 'package:punjabsuper/screen/desktop/menu/recievables.dart';
+import 'package:punjabsuper/screen/desktop/menu/transferables.dart';
+import 'package:punjabsuper/screen/desktop/menu/widgets/setting_dialog.dart';
+import 'package:punjabsuper/screen/desktop/menu/widgets/token-id_report.dart';
 
-import '../../routes/app_routes.dart';
-import '../../utils/image_constants.dart';
+import '../../../routes/app_routes.dart';
+import '../../../utils/image_constants.dart';
 
 class Menu extends StatefulWidget {
   const Menu({

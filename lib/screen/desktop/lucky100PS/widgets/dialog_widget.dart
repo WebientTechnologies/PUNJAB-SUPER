@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:punjabsuper/screen/lucky100PS/widgets/radio_buttons.dart';
+import 'package:punjabsuper/screen/desktop/lucky100PS/widgets/radio_buttons.dart';
 
 class DialogWidget extends StatefulWidget {
   final height;
