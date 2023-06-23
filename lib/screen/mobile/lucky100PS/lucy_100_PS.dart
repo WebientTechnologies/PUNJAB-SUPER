@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/screen/desktop/lucky100PS/widgets/dialog_widget.dart';
-import 'package:punjabsuper/widgets/counter.dart';
+import 'widgets/dialog_widget.dart';
+import '../../../widgets/counter.dart';
 
 class Lucky100PS extends StatefulWidget {
   const Lucky100PS({super.key});

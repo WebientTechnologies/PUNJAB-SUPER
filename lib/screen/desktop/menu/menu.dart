@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/screen/desktop/menu/recievables.dart';
-import 'package:punjabsuper/screen/desktop/menu/transferables.dart';
-import 'package:punjabsuper/screen/desktop/menu/widgets/setting_dialog.dart';
-import 'package:punjabsuper/screen/desktop/menu/widgets/token-id_report.dart';
+import 'recievables.dart';
+import 'transferables.dart';
+import 'widgets/setting_dialog.dart';
+import 'widgets/token-id_report.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../utils/image_constants.dart';
@@ -49,27 +48,33 @@ class _MenuState extends State<Menu> {
               Padding(
                 padding: EdgeInsets.only(
                   top: height * 0.02,
-                  left: width * 0.15,
+                  left: width * 0.16,
                 ),
-                child: const Align(
+                child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
                     'PS00202032',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: width * 0.02,
+                    ),
                   ),
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: height * 0.02, right: width * 0.1),
-                child: const Align(
+                padding: EdgeInsets.only(
+                  top: height * 0.02,
+                  left: width * 0.00,
+                ),
+                child: Align(
                   alignment: Alignment.topCenter,
                   child: Text(
                     '937.00',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.white),
+                      fontWeight: FontWeight.bold,
+                      fontSize: width * 0.02,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -273,7 +278,7 @@ class _MenuState extends State<Menu> {
               // Recievable Select all:
               Positioned(
                 right: width * 0.29,
-                bottom: height * 0.0999,
+                bottom: height * 0.095,
                 child: Checkbox(
                     value: _value1,
                     onChanged: (val) {
@@ -285,8 +290,8 @@ class _MenuState extends State<Menu> {
 
               // Transferable Select all:
               Positioned(
-                left: width * 0.23,
-                bottom: height * 0.0999,
+                left: width * 0.22,
+                bottom: height * 0.095,
                 child: Checkbox(
                     value: _value2,
                     onChanged: (val) {

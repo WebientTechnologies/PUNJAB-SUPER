@@ -12,12 +12,15 @@ class Recievables extends StatelessWidget {
     var width = Get.width;
     var height = Get.height;
     return Container(
-      width: width * 0.4,
-      height: 100,
+      width: width * 0.3,
+      height: height * 0.13,
       color: Colors.white,
       child: SingleChildScrollView(
         child: DataTable(
-          dataRowHeight: 20,
+          columnSpacing: width * 0.01,
+          horizontalMargin: width * 0.01,
+          headingRowHeight: height * 0.05,
+          dataRowHeight: height * 0.05,
           headingRowColor: MaterialStateColor.resolveWith(
             (Set<MaterialState> states) {
               return Colors.grey[100]!;
@@ -28,11 +31,18 @@ class Recievables extends StatelessWidget {
             width: 2,
             style: BorderStyle.solid,
           ),
-          headingTextStyle: const TextStyle(
-            fontSize: 16,
+          headingTextStyle: TextStyle(
+            fontSize: width * 0.01,
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
+          dataTextStyle: TextStyle(
+            fontSize: width * 0.01,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+
+          // Data:
           columns: const [
             DataColumn(
               label: Text(
@@ -56,7 +66,6 @@ class Recievables extends StatelessWidget {
                 color:
                     MaterialStateColor.resolveWith((Set<MaterialState> states) {
                   if (states.contains(MaterialState.hovered)) {
-                    print('Hovered');
                     return Colors.grey[200]!;
                   } else {
                     return Colors.grey[100]!;

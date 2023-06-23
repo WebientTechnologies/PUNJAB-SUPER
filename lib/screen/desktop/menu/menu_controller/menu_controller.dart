@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:punjabsuper/screen/desktop/menu/models/menu_model.dart';
+import '../models/menu_model.dart';
 
 class MenuController extends GetxController {
   RxList recievables = <MenuModel>[].obs;

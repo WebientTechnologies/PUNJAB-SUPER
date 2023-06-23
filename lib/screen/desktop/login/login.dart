@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/routes/app_routes.dart';
-import 'package:punjabsuper/screen/desktop/login/login_controller/login_controller.dart';
-import 'package:punjabsuper/utils/image_constants.dart';
+import '../../../routes/app_routes.dart';
+import 'login_controller/login_controller.dart';
+import '../../../utils/image_constants.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -19,6 +19,7 @@ class Login extends StatelessWidget {
         builder: (context, constraints) {
           var height = constraints.maxHeight;
           var width = constraints.maxWidth;
+
           return Stack(
             children: [
               SizedBox(
@@ -30,8 +31,10 @@ class Login extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    EdgeInsets.only(top: height * 0.045, left: width * 0.15),
+                padding: EdgeInsets.only(
+                  top: height * 0.05,
+                  left: width * 0.15,
+                ),
                 child: const Text(
                   'Please Login Now',
                   style: TextStyle(
@@ -95,9 +98,10 @@ class Login extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(
                   bottom: height * 0.01,
+                  left: width * 0.1,
                 ),
                 child: Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.bottomLeft,
                   child: MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: InkWell(
@@ -113,11 +117,16 @@ class Login extends StatelessWidget {
                           },
                           child: Image.asset(
                             ImageConstants.enterImg,
+                            height: height * 0.1,
+                            width: width * 0.3,
                           ))),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 8.0, right: width * 0.19),
+                padding: EdgeInsets.only(
+                  bottom: 8.0,
+                  right: width * 0.1,
+                ),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: MouseRegion(
@@ -127,6 +136,8 @@ class Login extends StatelessWidget {
                           Platform.isWindows ? exit(0) : SystemNavigator.pop,
                       child: Image.asset(
                         ImageConstants.closeImg,
+                        height: height * 0.1,
+                        width: width * 0.3,
                       ),
                     ),
                   ),

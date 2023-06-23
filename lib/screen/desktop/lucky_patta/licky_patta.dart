@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/widgets/analog_clock.dart';
-import 'package:punjabsuper/widgets/counter.dart';
-import 'package:punjabsuper/widgets/date.dart';
+import '../../../widgets/analog_clock.dart';
+import '../../../widgets/counter.dart';
+import '../../../widgets/date.dart';
 
 class LuckyPatt extends StatefulWidget {
   const LuckyPatt({super.key});

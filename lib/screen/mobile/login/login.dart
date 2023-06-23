@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/routes/app_routes.dart';
-import 'package:punjabsuper/screen/desktop/login/login_controller/login_controller.dart';
-import 'package:punjabsuper/utils/image_constants.dart';
+import '../../../routes/app_routes.dart';
+import 'login_controller/login_controller.dart';
+import '../../../utils/image_constants.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
