@@ -4,9 +4,13 @@ import 'package:intl/intl.dart';
 
 class DigitalClock extends StatefulWidget {
   final ratio;
+  final width;
+  final height;
   const DigitalClock({
     super.key,
     this.ratio = 0.0,
+    this.width = 0.0,
+    this.height = 0.0,
   });
   @override
   _DigitalClockState createState() => _DigitalClockState();
@@ -48,7 +52,7 @@ class _DigitalClockState extends State<DigitalClock> {
     return Text(
       _timeString == null ? '' : '$_timeString',
       style: TextStyle(
-        fontSize: widget.ratio * 8,
+        fontSize: widget.width * 0.011,
         color: Colors.white,
         fontWeight: FontWeight.bold,
       ),

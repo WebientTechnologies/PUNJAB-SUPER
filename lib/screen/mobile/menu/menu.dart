@@ -84,7 +84,7 @@ class _MenuState extends State<Menu> {
                 top: height * 0.08,
                 child: InkWell(
                   onTap: () {
-                    Get.toNamed(AppRoutes.luckyPatta);
+                    Get.toNamed(AppRoutes.mobileLuckyPatta);
                   },
                   child: Image.asset(
                     width: width * 0.11,
@@ -100,7 +100,7 @@ class _MenuState extends State<Menu> {
                 top: height * 0.295,
                 child: InkWell(
                   onTap: () {
-                    Get.toNamed(AppRoutes.lucky100PS);
+                    Get.toNamed(AppRoutes.mobileLucky100PS);
                   },
                   child: Image.asset(
                     width: width * 0.11,

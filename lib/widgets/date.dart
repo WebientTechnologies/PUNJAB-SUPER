@@ -4,9 +4,13 @@ import 'package:punjabsuper/widgets/digital_clock.dart';
 
 class Date extends StatelessWidget {
   final ratio;
+  final width;
+  final height;
   const Date({
     super.key,
     this.ratio = 0.0,
+    this.width = 0.0,
+    this.height = 0.0,
   });
 
   @override
@@ -22,7 +26,7 @@ class Date extends StatelessWidget {
         Text(
           '$month $day',
           style: TextStyle(
-            fontSize: ratio * 8,
+            fontSize: width * 0.011,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -32,6 +36,8 @@ class Date extends StatelessWidget {
         ),
         DigitalClock(
           ratio: ratio,
+          width: width,
+          height: height,
         ),
       ],
     );

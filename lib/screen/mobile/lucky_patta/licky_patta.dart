@@ -15,9 +15,7 @@ class LuckyPatt extends StatefulWidget {
 
 class _LuckyPattState extends State<LuckyPatt> {
   int selectedValue = 0;
-
   int totalSum = 0;
-
   final Random random = Random();
 
   final List<String> coins = [
@@ -49,16 +47,16 @@ class _LuckyPattState extends State<LuckyPatt> {
 
   List<int> selectedCards = [];
   List<Widget> selectedCardValues = [];
-
+  double width = 0.0;
   void addSelectedCardValueToList(int value, double x, double y, int index) {
     if (selectedValue == 0) return;
     Widget w = Transform.translate(
       offset: Offset(x, y),
       child: Text(
         value.toString(),
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.black,
-          fontSize: 20,
+          fontSize: width * 0.011,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -93,328 +91,323 @@ class _LuckyPattState extends State<LuckyPatt> {
     return Scaffold(
       body: LayoutBuilder(
         builder: (ctx, contrainsts) {
-          var width = contrainsts.maxWidth;
+          width = contrainsts.maxWidth;
           var height = contrainsts.maxHeight;
           var x = 0.0;
           var y = 0.0;
           // var ratio = width >= height ? width / height : height / width;
           var ratio = width / height;
-          return MouseRegion(
-            onHover: (event) {
-              x = event.position.dx;
-              y = event.position.dy;
+          return InkWell(
+            onTapDown: (details) {
+              x = details.localPosition.dx;
+              y = details.localPosition.dy;
+              var percentX = x / width;
+              var percentY = y / height;
+              //  ###########  FOR GETTING NUMBERS ########### //
+              if ((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.13 && percentY <= 0.22)) {
+                selectedValue = 5;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.23 && percentY <= 0.31))) {
+                selectedValue = 10;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.32 && percentY <= 0.41))) {
+                selectedValue = 20;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.42 && percentY <= 0.50))) {
+                selectedValue = 50;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.51 && percentY <= 0.60))) {
+                selectedValue = 100;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.61 && percentY <= 0.70))) {
+                selectedValue = 500;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.71 && percentY <= 0.79))) {
+                selectedValue = 1000;
+              } else if (((percentX >= 0.50 && percentX <= 0.57) &&
+                  (percentY >= 0.80 && percentY <= 0.88))) {
+                selectedValue = 5000;
+              }
+
+              // ################## NUMBERS END #################### //
+
+              // ################## CARDS ########################## //
+              // COLUMN 1::::: //
+              else if (((percentX >= 0.16 && percentX <= 0.28) &&
+                  (percentY >= 0.11 && percentY <= 0.29))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.20 * width,
+                  0.29 * height,
+                  1,
+                );
+              } else if (((percentX >= 0.16 && percentX <= 0.28) &&
+                  (percentY >= 0.32 && percentY <= 0.49))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.20 * width,
+                  0.49 * height,
+                  4,
+                );
+              } else if (((percentX >= 0.16 && percentX <= 0.28) &&
+                  (percentY >= 0.51 && percentY <= 0.69))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.20 * width,
+                  0.685 * height,
+                  7,
+                );
+              } else if (((percentX >= 0.16 && percentX <= 0.28) &&
+                  (percentY >= 0.71 && percentY <= 0.88))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.20 * width,
+                  0.88 * height,
+                  10,
+                );
+              }
+
+              // COLUMN 2 :::::::: //
+
+              else if (((percentX >= 0.27 && percentX <= 0.38) &&
+                  (percentY >= 0.11 && percentY <= 0.29))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.3 * width,
+                  0.29 * height,
+                  2,
+                );
+              } else if (((percentX >= 0.27 && percentX <= 0.38) &&
+                  (percentY >= 0.32 && percentY <= 0.49))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.3 * width,
+                  0.49 * height,
+                  5,
+                );
+              } else if (((percentX >= 0.27 && percentX <= 0.38) &&
+                  (percentY >= 0.51 && percentY <= 0.69))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.3 * width,
+                  0.685 * height,
+                  8,
+                );
+              } else if (((percentX >= 0.27 && percentX <= 0.38) &&
+                  (percentY >= 0.71 && percentY <= 0.88))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.3 * width,
+                  0.88 * height,
+                  11,
+                );
+              }
+
+              // COLUMN 3 :::::::: //
+
+              else if (((percentX >= 0.39 && percentX <= 0.49) &&
+                  (percentY >= 0.11 && percentY <= 0.29))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.41 * width,
+                  0.29 * height,
+                  3,
+                );
+              } else if (((percentX >= 0.39 && percentX <= 0.49) &&
+                  (percentY >= 0.32 && percentY <= 0.49))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.41 * width,
+                  0.49 * height,
+                  6,
+                );
+              } else if (((percentX >= 0.39 && percentX <= 0.49) &&
+                  (percentY >= 0.51 && percentY <= 0.69))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.41 * width,
+                  0.685 * height,
+                  9,
+                );
+              } else if (((percentX >= 0.39 && percentX <= 0.49) &&
+                  (percentY >= 0.71 && percentY <= 0.88))) {
+                addSelectedCardValueToList(
+                  selectedValue,
+                  0.41 * width,
+                  0.88 * height,
+                  12,
+                );
+              }
+
+              // ################## CARDS END #################### //
             },
-            child: InkWell(
-              onTap: () {
-                var percentX = x / width;
-                var percentY = y / height;
-                // print('percentX: $percentX
-                //, percentY: $percentY');
-
-                //  ###########  FOR GETTING NUMBERS ########### //
-                if ((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.13 && percentY <= 0.22)) {
-                  selectedValue = 5;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.23 && percentY <= 0.31))) {
-                  selectedValue = 10;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.32 && percentY <= 0.41))) {
-                  selectedValue = 20;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.42 && percentY <= 0.50))) {
-                  selectedValue = 50;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.51 && percentY <= 0.60))) {
-                  selectedValue = 100;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.61 && percentY <= 0.70))) {
-                  selectedValue = 500;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.71 && percentY <= 0.79))) {
-                  selectedValue = 1000;
-                } else if (((percentX >= 0.50 && percentX <= 0.57) &&
-                    (percentY >= 0.80 && percentY <= 0.88))) {
-                  selectedValue = 5000;
-                }
-
-                // ################## NUMBERS END #################### //
-
-                // ################## CARDS ########################## //
-                // COLUMN 1::::: //
-                else if (((percentX >= 0.16 && percentX <= 0.28) &&
-                    (percentY >= 0.11 && percentY <= 0.29))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.20 * width,
-                    0.29 * height,
-                    1,
-                  );
-                } else if (((percentX >= 0.16 && percentX <= 0.28) &&
-                    (percentY >= 0.32 && percentY <= 0.49))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.20 * width,
-                    0.49 * height,
-                    4,
-                  );
-                } else if (((percentX >= 0.16 && percentX <= 0.28) &&
-                    (percentY >= 0.51 && percentY <= 0.69))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.20 * width,
-                    0.685 * height,
-                    7,
-                  );
-                } else if (((percentX >= 0.16 && percentX <= 0.28) &&
-                    (percentY >= 0.71 && percentY <= 0.88))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.20 * width,
-                    0.88 * height,
-                    10,
-                  );
-                }
-
-                // COLUMN 2 :::::::: //
-
-                else if (((percentX >= 0.27 && percentX <= 0.38) &&
-                    (percentY >= 0.11 && percentY <= 0.29))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.3 * width,
-                    0.29 * height,
-                    2,
-                  );
-                } else if (((percentX >= 0.27 && percentX <= 0.38) &&
-                    (percentY >= 0.32 && percentY <= 0.49))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.3 * width,
-                    0.49 * height,
-                    5,
-                  );
-                } else if (((percentX >= 0.27 && percentX <= 0.38) &&
-                    (percentY >= 0.51 && percentY <= 0.69))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.3 * width,
-                    0.685 * height,
-                    8,
-                  );
-                } else if (((percentX >= 0.27 && percentX <= 0.38) &&
-                    (percentY >= 0.71 && percentY <= 0.88))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.3 * width,
-                    0.88 * height,
-                    11,
-                  );
-                }
-
-                // COLUMN 3 :::::::: //
-
-                else if (((percentX >= 0.39 && percentX <= 0.49) &&
-                    (percentY >= 0.11 && percentY <= 0.29))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.41 * width,
-                    0.29 * height,
-                    3,
-                  );
-                } else if (((percentX >= 0.39 && percentX <= 0.49) &&
-                    (percentY >= 0.32 && percentY <= 0.49))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.41 * width,
-                    0.49 * height,
-                    6,
-                  );
-                } else if (((percentX >= 0.39 && percentX <= 0.49) &&
-                    (percentY >= 0.51 && percentY <= 0.69))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.41 * width,
-                    0.685 * height,
-                    9,
-                  );
-                } else if (((percentX >= 0.39 && percentX <= 0.49) &&
-                    (percentY >= 0.71 && percentY <= 0.88))) {
-                  addSelectedCardValueToList(
-                    selectedValue,
-                    0.41 * width,
-                    0.88 * height,
-                    12,
-                  );
-                }
-
-                // ################## CARDS END #################### //
-              },
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: double.maxFinite,
-                    width: double.maxFinite,
-                    child: Image.asset(
-                      'assets/img/BackPatti.png',
-                      fit: BoxFit.fill,
-                      height: height * 1,
-                      width: width * 1,
-                    ),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: double.maxFinite,
+                  width: double.maxFinite,
+                  child: Image.asset(
+                    'assets/img/BackPatti.png',
+                    fit: BoxFit.fill,
+                    height: height * 1,
+                    width: width * 1,
                   ),
-                  // Date and Digital Clock:
-                  Positioned(
-                    left: width * 0.02,
-                    top: height * 0.05,
-                    child: SizedBox(
-                      height: height * 0.1,
-                      width: width * 0.14,
-                      child: Date(
-                        ratio: ratio,
-                      ),
-                    ),
-                  ),
-                  // Analog Clock:
-                  Positioned(
-                    top: height * 0.1,
-                    left: width * -0.073,
-                    child: AnalogClock(
+                ),
+                // Date and Digital Clock:
+                Positioned(
+                  left: width * 0.02,
+                  top: height * 0.05,
+                  child: SizedBox(
+                    height: height * 0.1,
+                    width: width * 0.14,
+                    child: Date(
                       ratio: ratio,
-                      height: height,
                       width: width,
+                      height: height,
                     ),
                   ),
-                  // Counter :
-                  Positioned(
-                    left: width * 0.05,
-                    top: height * 0.37,
-                    child: Counter(
-                      startMinutes: 0,
-                      startSeconds: 20,
-                      ratio: ratio,
-                      style: TextStyle(
-                        fontSize: ratio * 8,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                ),
+                // Analog Clock:
+                Positioned(
+                  top: height * 0.1,
+                  left: width * -0.073,
+                  child: AnalogClock(
+                    ratio: ratio,
+                    height: height,
+                    width: width,
+                  ),
+                ),
+                // Counter :
+                Positioned(
+                  left: width * 0.05,
+                  top: height * 0.37,
+                  child: Counter(
+                    startMinutes: 0,
+                    startSeconds: 20,
+                    ratio: ratio,
+                    style: TextStyle(
+                      fontSize: width * 0.011,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                ),
 
-                  // Score :
-                  Positioned(
-                    left: width * 0.05,
-                    top: height * 0.533,
-                    child: Text(
-                      '987',
-                      style: TextStyle(
-                        fontSize: ratio * 8,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                // Score :
+                Positioned(
+                  left: width * 0.05,
+                  top: height * 0.533,
+                  child: Text(
+                    '987',
+                    style: TextStyle(
+                      fontSize: width * 0.011,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                ),
 
-                  // Winner :
-                  Positioned(
-                    left: width * 0.05,
-                    top: height * 0.67,
-                    child: Text(
-                      '0',
-                      style: TextStyle(
-                        fontSize: ratio * 8,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                // Winner :
+                Positioned(
+                  left: width * 0.05,
+                  top: height * 0.67,
+                  child: Text(
+                    '0',
+                    style: TextStyle(
+                      fontSize: width * 0.011,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                ),
 
-                  // Left Bottom Corner :
-                  Positioned(
-                    left: width * 0.05,
-                    bottom: height * 0.01,
-                    child: Text(
-                      totalSum.toString(),
-                      style: TextStyle(
-                        fontSize: ratio * 8,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                // Left Bottom Corner :
+                Positioned(
+                  left: width * 0.05,
+                  bottom: height * 0.01,
+                  child: Text(
+                    totalSum.toString(),
+                    style: TextStyle(
+                      fontSize: width * 0.011,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                ),
 
-                  // Close button
-                  Positioned(
-                    left: width * 0.02,
-                    bottom: height * 0.22,
-                    child: Image.asset(
-                      'assets/img/Close2.png',
-                      height: height * 0.07,
-                      width: width * 0.1,
-                    ),
+                // Close button
+                Positioned(
+                  left: width * 0.02,
+                  bottom: height * 0.22,
+                  child: Image.asset(
+                    'assets/img/Close2.png',
+                    height: height * 0.07,
+                    width: width * 0.1,
                   ),
+                ),
 
-                  // Cancel button
-                  Positioned(
-                    left: width * 0.6,
-                    top: height * 0.133,
-                    child: Image.asset(
-                      'assets/img/Cancel-Bet.png',
-                      height: height * 0.07,
-                      width: width * 0.1,
-                    ),
+                // Cancel button
+                Positioned(
+                  left: width * 0.6,
+                  top: height * 0.133,
+                  child: Image.asset(
+                    'assets/img/Cancel-Bet.png',
+                    height: height * 0.07,
+                    width: width * 0.1,
                   ),
+                ),
 
-                  // Bottom Right Card:
-                  Positioned(
-                    bottom: height * 0.1,
-                    right: width * 0.02,
-                    child: Image.asset(
-                      cardImage,
-                      height: height * 0.2,
-                      width: width * 0.1,
-                      fit: BoxFit.contain,
-                    ),
+                // Bottom Right Card:
+                Positioned(
+                  bottom: height * 0.1,
+                  right: width * 0.02,
+                  child: Image.asset(
+                    cardImage,
+                    height: height * 0.2,
+                    width: width * 0.1,
+                    fit: BoxFit.contain,
                   ),
+                ),
 
-                  // Bottom five Cards:
-                  Positioned(
-                    bottom: height * 0.0,
-                    right: width * 0.15,
-                    child: Row(
-                      children: List.generate(cardPathList.length, (index) {
-                        return Image.asset(
-                          cardPathList[index],
-                          height: height * 0.08,
-                          width: width * 0.035,
-                          fit: BoxFit.fill,
-                        );
-                      }),
-                    ),
-                  ),
-
-                  // Exit
-                  Positioned(
-                    bottom: height * 0.0,
-                    right: width * 0.0,
-                    child: InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Image.asset(
-                        'assets/img/exit.png',
-                        height: height * 0.07,
-                        width: width * 0.13,
+                // Bottom five Cards:
+                Positioned(
+                  bottom: height * 0.0,
+                  right: width * 0.15,
+                  child: Row(
+                    children: List.generate(cardPathList.length, (index) {
+                      return Image.asset(
+                        cardPathList[index],
+                        height: height * 0.08,
+                        width: width * 0.035,
                         fit: BoxFit.fill,
-                      ),
+                      );
+                    }),
+                  ),
+                ),
+
+                // Exit
+                Positioned(
+                  bottom: height * 0.0,
+                  right: width * 0.0,
+                  child: InkWell(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Image.asset(
+                      'assets/img/exit.png',
+                      height: height * 0.07,
+                      width: width * 0.13,
+                      fit: BoxFit.fill,
                     ),
                   ),
+                ),
 
-                  // Showing selected card values:
-                  ...selectedCardValues.map((e) => e).toList(),
+                // Showing selected card values:
+                ...selectedCardValues.map((e) => e).toList(),
 
-                  // ------------- #### ---------------- //
-                ],
-              ),
+                // ------------- #### ---------------- //
+              ],
             ),
           );
         },
