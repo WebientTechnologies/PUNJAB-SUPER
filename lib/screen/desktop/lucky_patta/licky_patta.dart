@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
+import 'package:punjabsuper/screen/desktop/lucky100PS/controllers/place_bet_controller.dart';
 import '../../../widgets/analog_clock.dart';
 import '../../../widgets/counter.dart';
 import '../../../widgets/date.dart';
@@ -17,6 +19,8 @@ class _LuckyPattState extends State<LuckyPatt> {
   int selectedValue = 0;
   int totalSum = 0;
   final Random random = Random();
+
+  var placeBetController = Get.put(PlaceBetController());
 
   final List<String> coins = [
     'assets/img/Coin1Glow.jpg',
@@ -47,13 +51,14 @@ class _LuckyPattState extends State<LuckyPatt> {
 
   List<int> selectedCards = [];
   List<Widget> selectedCardValues = [];
+  List<Map<String, dynamic>> cardsChosen = [];
   double width = 0.0;
-  void addSelectedCardValueToList(int value, double x, double y, int index) {
-    if (selectedValue == 0) return;
-    Widget w = Transform.translate(
+
+  Widget getCard(int val, x, y) {
+    return Transform.translate(
       offset: Offset(x, y),
       child: Text(
-        value.toString(),
+        val.toString(),
         style: TextStyle(
           color: Colors.black,
           fontSize: width * 0.02,
@@ -61,16 +66,52 @@ class _LuckyPattState extends State<LuckyPatt> {
         ),
       ),
     );
+  }
+
+  void addSelectedCardValueToList(
+    int value,
+    double x,
+    double y,
+    int index,
+    String family,
+  ) {
+    // print('Value is $value');
+    // print('Name is $family');
+    // print("index is $index");
+    if (selectedValue == 0) return;
+    // Widget w = Transform.translate(
+    //   offset: Offset(x, y),
+    //   child: Text(
+    //     value.toString(),
+    //     style: TextStyle(
+    //       color: Colors.black,
+    //       fontSize: width * 0.02,
+    //       fontWeight: FontWeight.bold,
+    //     ),
+    //   ),
+    // );
     totalSum = totalSum + selectedValue;
+    int cardIndex =
+        cardsChosen.indexWhere((element) => element['cardNumber'] == index);
+    if (cardIndex == -1) {
+      cardsChosen.add({
+        'cardNumber': index,
+        'points': value,
+        'family': family,
+      });
+    } else {
+      cardsChosen[cardIndex]['points'] += value;
+    }
 
     // Check if Card Already Exists:
-
     int i = selectedCards.indexOf(index);
 
     if (i != -1) {
-      selectedCardValues[i] = w;
+      int v = cardsChosen[cardIndex]['points'];
+
+      selectedCardValues[i] = getCard(v, x, y);
     } else {
-      selectedCardValues.add(w);
+      selectedCardValues.add(getCard(value, x, y));
       selectedCards.add(index);
     }
 
@@ -88,6 +129,7 @@ class _LuckyPattState extends State<LuckyPatt> {
           n < 10 ? 'assets/OpenNoShow/0$n.png' : 'assets/OpenNoShow/$n.png';
       cardPathList.add(cardImage);
     }
+    // print("Card Chosen are $cardsChosen");
     return Scaffold(
       body: LayoutBuilder(
         builder: (ctx, contrainsts) {
@@ -98,11 +140,68 @@ class _LuckyPattState extends State<LuckyPatt> {
           // var ratio = width >= height ? width / height : height / width;
           var ratio = width / height;
           return InkWell(
-            onTapDown: (details) {
+            onTapDown: (details) async {
               x = details.localPosition.dx;
               y = details.localPosition.dy;
               var percentX = x / width;
               var percentY = y / height;
+
+              // print('Percent x $percentX $percentY');
+              // BET OKAY BUTTON
+              if ((percentX >= 0.08 && percentX <= 0.14) &&
+                  (percentY >= 0.82 && percentY <= 0.86)) {
+                // print('Bet okay');
+                var statusCode = await placeBetController.betOkay(cardsChosen);
+                //Show Toast:
+                if (statusCode == 200) {
+                  showToastWidget(
+                    Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.black,
+                        ),
+                        child: const Text(
+                          'Bet Placed Successfully',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
+                    context: context,
+                    animation: StyledToastAnimation.slideFromBottom,
+                    reverseAnimation: StyledToastAnimation.slideToBottom,
+                    position: StyledToastPosition.bottom,
+                    animDuration: const Duration(seconds: 1),
+                    duration: const Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.fastOutSlowIn,
+                  );
+                } else {
+                  showToastWidget(
+                    Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.black,
+                        ),
+                        child: const Text(
+                          'Bet Cannot be Placed',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
+                    context: context,
+                    animation: StyledToastAnimation.slideFromBottom,
+                    reverseAnimation: StyledToastAnimation.slideToBottom,
+                    position: StyledToastPosition.bottom,
+                    animDuration: const Duration(seconds: 1),
+                    duration: const Duration(seconds: 4),
+                    curve: Curves.elasticOut,
+                    reverseCurve: Curves.fastOutSlowIn,
+                  );
+                }
+              }
+
               //  ###########  FOR GETTING NUMBERS ########### //
               if ((percentX >= 0.50 && percentX <= 0.57) &&
                   (percentY >= 0.13 && percentY <= 0.22)) {
@@ -141,6 +240,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.20 * width,
                   0.29 * height,
                   1,
+                  "CHERRY",
                 );
               } else if (((percentX >= 0.16 && percentX <= 0.28) &&
                   (percentY >= 0.32 && percentY <= 0.49))) {
@@ -149,6 +249,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.20 * width,
                   0.49 * height,
                   4,
+                  'HEART',
                 );
               } else if (((percentX >= 0.16 && percentX <= 0.28) &&
                   (percentY >= 0.51 && percentY <= 0.69))) {
@@ -157,6 +258,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.20 * width,
                   0.685 * height,
                   7,
+                  "SPADE",
                 );
               } else if (((percentX >= 0.16 && percentX <= 0.28) &&
                   (percentY >= 0.71 && percentY <= 0.88))) {
@@ -165,6 +267,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.20 * width,
                   0.88 * height,
                   10,
+                  "DIAMOND",
                 );
               }
 
@@ -177,6 +280,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.3 * width,
                   0.29 * height,
                   2,
+                  "CHERRY",
                 );
               } else if (((percentX >= 0.27 && percentX <= 0.38) &&
                   (percentY >= 0.32 && percentY <= 0.49))) {
@@ -185,6 +289,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.3 * width,
                   0.49 * height,
                   5,
+                  "HEART",
                 );
               } else if (((percentX >= 0.27 && percentX <= 0.38) &&
                   (percentY >= 0.51 && percentY <= 0.69))) {
@@ -193,6 +298,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.3 * width,
                   0.685 * height,
                   8,
+                  "SPADE",
                 );
               } else if (((percentX >= 0.27 && percentX <= 0.38) &&
                   (percentY >= 0.71 && percentY <= 0.88))) {
@@ -201,6 +307,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.3 * width,
                   0.88 * height,
                   11,
+                  "DIAMOND",
                 );
               }
 
@@ -213,6 +320,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.41 * width,
                   0.29 * height,
                   3,
+                  "CHERRY",
                 );
               } else if (((percentX >= 0.39 && percentX <= 0.49) &&
                   (percentY >= 0.32 && percentY <= 0.49))) {
@@ -221,6 +329,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.41 * width,
                   0.49 * height,
                   6,
+                  "HEART",
                 );
               } else if (((percentX >= 0.39 && percentX <= 0.49) &&
                   (percentY >= 0.51 && percentY <= 0.69))) {
@@ -229,6 +338,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.41 * width,
                   0.685 * height,
                   9,
+                  "SPACE",
                 );
               } else if (((percentX >= 0.39 && percentX <= 0.49) &&
                   (percentY >= 0.71 && percentY <= 0.88))) {
@@ -237,6 +347,7 @@ class _LuckyPattState extends State<LuckyPatt> {
                   0.41 * width,
                   0.88 * height,
                   12,
+                  "DIAMOND",
                 );
               }
 
@@ -405,6 +516,7 @@ class _LuckyPattState extends State<LuckyPatt> {
 
                 // Showing selected card values:
                 ...selectedCardValues.map((e) => e).toList(),
+                // ...cardsChosen.map((e) => e['points']).toList(),
 
                 // ------------- #### ---------------- //
               ],

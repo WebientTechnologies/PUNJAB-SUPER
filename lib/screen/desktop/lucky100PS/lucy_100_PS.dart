@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
+import 'package:punjabsuper/screen/desktop/lucky100PS/controllers/get_winner_controller.dart';
+import 'controllers/place_bet_controller.dart';
 import 'widgets/dialog_widget.dart';
 import '../../../widgets/counter.dart';
 
@@ -15,13 +18,18 @@ class Lucky100PS extends StatefulWidget {
 class _Lucky100PSState extends State<Lucky100PS> {
   bool showCMJM = false;
   final Random random = Random();
-  List<String> combinations = [];
+  List<Map<String, dynamic>> combinations = [];
   double scaleFactor = 0.001;
   int value = 0;
   String points = '-1';
   int totalNumbers = 0;
   int totalValue = 0;
   String pressedNumber = '';
+  bool combineMaker = true;
+  bool jodiMaker = false;
+
+  var placeBetController = Get.put(PlaceBetController());
+  var winnerController = Get.put(GetWinnerController());
 
   Map coordinates = {
     // First Row:
@@ -177,7 +185,16 @@ class _Lucky100PSState extends State<Lucky100PS> {
       combinations = [];
       for (var i = 0; i < temp.length; i++) {
         for (var j = 0; j < temp.length; j++) {
-          combinations.add(temp[i] + temp[j]);
+          var number = temp[i] + temp[j];
+          int index = combinations.indexWhere((element) => element == number);
+          if (index == -1) {
+            combinations.add({
+              'number': number,
+              'points': int.parse(points),
+            });
+          } else {
+            combinations[index]['points'] += int.parse(points);
+          }
         }
       }
       // showToast(combinations.toString());
@@ -199,7 +216,16 @@ class _Lucky100PSState extends State<Lucky100PS> {
       combinations = [];
       for (var i = 0; i < temp.length; i++) {
         for (var j = 0; j < temp1.length; j++) {
-          combinations.add(temp[i] + temp1[j]);
+          var number = temp[i] + temp1[j];
+          int index = combinations.indexWhere((element) => element == number);
+          if (index == -1) {
+            combinations.add({
+              'number': number,
+              'points': int.parse(points),
+            });
+          } else {
+            combinations[index]['points'] += int.parse(points);
+          }
         }
       }
       // showToast(combinations.toString());
@@ -221,20 +247,45 @@ class _Lucky100PSState extends State<Lucky100PS> {
     });
   }
 
+  void changeJodiMakerCombineMaker(
+      int index, String valueA, String valueB, points) {
+    if (index == 1) {
+      jodiMaker
+          ? calculateJodiMakers(valueA, valueB, points)
+          : calculateCombineMaker(valueA, points);
+    } else {
+      showCMJMDialog(false);
+    }
+  }
+
+  void changeSelected(val, index) {
+    setState(() {
+      // selected = val;
+      if (index == 0) {
+        combineMaker = true;
+        jodiMaker = false;
+      } else {
+        combineMaker = false;
+        jodiMaker = true;
+      }
+    });
+  }
+
   // Widget Functions
   Widget shadeNumber({
     String number = '-1',
+    int value = -1,
     double rowConstant = 0.0,
     double columnConstant = 0.0,
     double height = 0.0,
     double width = 0.0,
     double ratio = 0.0,
   }) {
-    if (number == '-1') {
+    if (number == '-1' || value == -1) {
       return const SizedBox.shrink();
     }
     // print('row is $row and column is $column and row Conts is $rowConstant');
-
+    // print('Number is $number and value is $value');
     return Positioned(
       left: width * rowConstant,
       top: height * columnConstant,
@@ -246,7 +297,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
         // ).image,
         child: FittedBox(
           child: Text(
-            points,
+            value.toString(),
             style: TextStyle(
               color: Colors.black,
               fontSize: ratio * 15,
@@ -260,49 +311,68 @@ class _Lucky100PSState extends State<Lucky100PS> {
 
   @override
   Widget build(BuildContext context) {
-    int num = random.nextInt(100);
-
+    // int num = random.nextInt(100);
+    // print('Selected is $combinations, $totalNumbers, $totalValue');
+    totalValue =
+        combinations.fold(0, (prev, next) => prev + next['points'] as int);
     return Scaffold(
-      body: LayoutBuilder(builder: (ctx, constrainsts) {
-        var height = constrainsts.maxHeight;
-        var width = constrainsts.maxWidth;
-        scaleFactor = 0.002;
-        var ratio = width > height ? height * scaleFactor : width * scaleFactor;
-        var percentX = 0.0;
-        var percentY = 0.0;
+      body: LayoutBuilder(
+        builder: (ctx, constrainsts) {
+          var height = constrainsts.maxHeight;
+          var width = constrainsts.maxWidth;
+          scaleFactor = 0.002;
+          var ratio =
+              width > height ? height * scaleFactor : width * scaleFactor;
+          var percentX = 0.0;
+          var percentY = 0.0;
 
-        var style = TextStyle(
-          color: Colors.black,
-          fontSize: ratio * 9,
-          fontWeight: FontWeight.bold,
-        );
-        return MouseRegion(
-          onHover: (event) {
-            var x = event.position.dx;
-            var y = event.position.dy;
-
-            percentX = x / width;
-            percentY = y / height;
-          },
-          child: InkWell(
-            onTap: () {
+          var style = TextStyle(
+            color: Colors.black,
+            fontSize: ratio * 9,
+            fontWeight: FontWeight.bold,
+          );
+          return InkWell(
+            onTapDown: (event) {
+              var x = event.globalPosition.dx;
+              var y = event.globalPosition.dy;
+              percentX = x / width;
+              percentY = y / height;
+              // print('Percent X is $percentX and Percent Y is $percentY');
               // 01 : 0.013 and 0.086
-              print('Position is $percentX and $percentY');
               var selectedKeys = [];
+              bool updated = false;
 
               coordinates.forEach((key, value) {
-                if (percentX > value['x'] &&
-                    percentX < value['x'] + 0.086 &&
-                    percentY > value['y'] &&
-                    percentY < value['y'] + 0.086) {
-                  selectedKeys.add(key);
+                if (value.containsKey('x') && value.containsKey('y')) {
+                  updated = true;
+                  if (percentX > value['x'] &&
+                      percentX < value['x'] + 0.086 &&
+                      percentY > value['y'] &&
+                      percentY < value['y'] + 0.086) {
+                    selectedKeys.add(key);
+                  }
                 }
               });
+              if (!updated) {
+                return;
+              }
               if (selectedKeys.isNotEmpty) {
                 pressedNumber = selectedKeys.last;
               }
-              print('Pressed Number is $pressedNumber');
-              combinations.add(pressedNumber);
+              // print('Pressed Number is $pressedNumber');
+              if (points == '-1') {
+                return;
+              }
+              int index = combinations
+                  .indexWhere((element) => element['number'] == pressedNumber);
+              if (index == -1) {
+                combinations.add({
+                  'number': pressedNumber,
+                  'points': int.parse(points),
+                });
+              } else {
+                combinations[index]['points'] += int.parse(points);
+              }
               setState(() {});
             },
             child: Stack(
@@ -316,18 +386,25 @@ class _Lucky100PSState extends State<Lucky100PS> {
                   ),
                 ),
 
-                ...combinations
-                    .map(
-                      (e) => shadeNumber(
-                        number: e,
-                        rowConstant: coordinates[e]['x'],
-                        columnConstant: coordinates[e]['y'],
+                ...combinations.map((e) {
+                  String number = e['number'];
+                  int value = e['points'];
+                  if (coordinates[number] != null) {
+                    if (coordinates[number].containsKey('x') &&
+                        coordinates[number].containsKey('y')) {
+                      return shadeNumber(
+                        number: number,
+                        value: value,
+                        rowConstant: coordinates[number]['x'],
+                        columnConstant: coordinates[number]['y'],
                         height: height,
                         width: width,
                         ratio: ratio,
-                      ),
-                    )
-                    .toList(),
+                      );
+                    }
+                  }
+                  return const SizedBox.shrink();
+                }).toList(),
 
                 // Score :
                 Positioned(
@@ -405,13 +482,16 @@ class _Lucky100PSState extends State<Lucky100PS> {
 
                 // Number Selector:
 
-                Positioned(
-                  right: width * 0.04,
-                  top: height * 0.03,
-                  child: Text(
-                    num < 10 ? '0$num' : num.toString(),
-                    style: style.copyWith(
-                      fontSize: ratio * 40,
+                Obx(
+                  () => Positioned(
+                    right: width * 0.04,
+                    top: height * 0.03,
+                    child: Text(
+                      // num < 10 ? '0$num' : num.toString(),
+                      winnerController.winner.value.toString(),
+                      style: style.copyWith(
+                        fontSize: ratio * 40,
+                      ),
                     ),
                   ),
                 ),
@@ -436,7 +516,63 @@ class _Lucky100PSState extends State<Lucky100PS> {
                   right: 0,
                   bottom: height * 0.08,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () async {
+                      var statusCode = -1;
+                      if (combinations.isEmpty) {
+                        return;
+                      } else {
+                        statusCode =
+                            await placeBetController.betOkay(combinations);
+                      }
+                      //Show Toast:
+                      if (statusCode == 200) {
+                        showToastWidget(
+                          Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.black,
+                              ),
+                              child: const Text(
+                                'Bet Placed Successfully',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )),
+                          context: context,
+                          animation: StyledToastAnimation.slideFromBottom,
+                          reverseAnimation: StyledToastAnimation.slideToBottom,
+                          position: StyledToastPosition.bottom,
+                          animDuration: const Duration(seconds: 1),
+                          duration: const Duration(seconds: 4),
+                          curve: Curves.elasticOut,
+                          reverseCurve: Curves.fastOutSlowIn,
+                        );
+                      } else {
+                        showToastWidget(
+                          Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.black,
+                              ),
+                              child: const Text(
+                                'Bet Cannot be Placed',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )),
+                          context: context,
+                          animation: StyledToastAnimation.slideFromBottom,
+                          reverseAnimation: StyledToastAnimation.slideToBottom,
+                          position: StyledToastPosition.bottom,
+                          animDuration: const Duration(seconds: 1),
+                          duration: const Duration(seconds: 4),
+                          curve: Curves.elasticOut,
+                          reverseCurve: Curves.fastOutSlowIn,
+                        );
+                      }
+                    },
                     child: Image.asset(
                       'assets/img/BetOk.png',
                       height: height * 0.0499,
@@ -723,6 +859,11 @@ class _Lucky100PSState extends State<Lucky100PS> {
                         showCMJMDialog: showCMJMDialog,
                         totalNumbers: totalNumbers,
                         totalValue: totalValue,
+                        changeJodiMakerCombineMaker:
+                            changeJodiMakerCombineMaker,
+                        combineMaker: combineMaker,
+                        jodiMaker: jodiMaker,
+                        changeSelected: changeSelected,
                       ),
                     ),
                   ),
@@ -734,17 +875,17 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     left: width * 0.03,
                     child: Text(
                       totalValue.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: width * 0.011,
                         fontWeight: FontWeight.bold,
                       ),
                     ))
               ],
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

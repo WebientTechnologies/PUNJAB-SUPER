@@ -10,6 +10,10 @@ class DialogWidget extends StatefulWidget {
   final showCMJMDialog;
   final totalNumbers;
   final totalValue;
+  final jodiMaker;
+  final combineMaker;
+  final changeJodiMakerCombineMaker;
+  final changeSelected;
   const DialogWidget({
     super.key,
     this.height,
@@ -20,6 +24,10 @@ class DialogWidget extends StatefulWidget {
     this.showCMJMDialog,
     this.totalNumbers,
     this.totalValue,
+    this.jodiMaker,
+    this.combineMaker,
+    this.changeJodiMakerCombineMaker,
+    this.changeSelected,
   });
 
   @override
@@ -27,17 +35,12 @@ class DialogWidget extends StatefulWidget {
 }
 
 class _DialogWidgetState extends State<DialogWidget> {
-  bool combineMaker = true;
-  bool jodiMaker = false;
   bool selected = true;
   String valueA = '';
   String valueB = '';
   String points = '';
-  final TextStyle style = const TextStyle(
-    color: Colors.white,
-    fontSize: 15,
-    fontFamily: 'Montserrat',
-  );
+  TextStyle style = const TextStyle();
+
   Widget textField(String label, index, value) {
     return Row(
       children: [
@@ -45,20 +48,20 @@ class _DialogWidgetState extends State<DialogWidget> {
           label,
           style: style.copyWith(
             color: Colors.amber,
-            fontSize: 16,
+            fontSize: widget.width * 0.011,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(
-          width: 10,
+        SizedBox(
+          width: widget.width * 0.01,
         ),
         SizedBox(
-          width: 100,
-          height: 30,
+          width: widget.width * 0.07,
+          height: widget.height * 0.05,
           child: TextField(
             style: style.copyWith(
               color: Colors.black,
-              fontSize: 16,
+              fontSize: widget.width * 0.011,
               fontWeight: FontWeight.bold,
             ),
             decoration: InputDecoration(
@@ -105,13 +108,12 @@ class _DialogWidgetState extends State<DialogWidget> {
   Widget button(String label, int index) {
     return InkWell(
       onTap: () {
-        if (index == 1) {
-          jodiMaker
-              ? widget.calculateJodiMakers(valueA, valueB, points)
-              : widget.calculateCombineMaker(valueA, points);
-        } else {
-          widget.showCMJMDialog(false);
-        }
+        widget.changeJodiMakerCombineMaker(
+          index,
+          valueA,
+          valueB,
+          points,
+        );
       },
       child: Container(
         alignment: Alignment.center,
@@ -122,13 +124,13 @@ class _DialogWidgetState extends State<DialogWidget> {
             color: Colors.red,
           ),
         ),
-        height: 40,
-        width: 100,
+        height: widget.height * 0.05,
+        width: widget.width * 0.09,
         child: Text(
           label,
           style: style.copyWith(
             color: const Color.fromARGB(255, 10, 102, 177),
-            fontSize: 13,
+            fontSize: widget.width * 0.011,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -136,24 +138,21 @@ class _DialogWidgetState extends State<DialogWidget> {
     );
   }
 
-  void changeSelected(val, index) {
-    setState(() {
-      // selected = val;
-      if (index == 0) {
-        combineMaker = true;
-        jodiMaker = false;
-      } else {
-        combineMaker = false;
-        jodiMaker = true;
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var height = widget.height;
     var width = widget.width;
-    var ratio = widget.ratio;
+
+    style = TextStyle(
+      color: Colors.white,
+      fontSize: widget.width * 0.011,
+      fontFamily: 'Montserrat',
+    );
     return Container(
       height: height * 0.35,
       width: width * 0.35,
@@ -169,15 +168,16 @@ class _DialogWidgetState extends State<DialogWidget> {
           children: [
             // Radio Buttons
             RadioButton(
-              changeSelected: changeSelected,
-              combinedMaker: combineMaker,
-              jodiMaker: jodiMaker,
+              changeSelected: widget.changeSelected,
+              combinedMaker: widget.combineMaker,
+              jodiMaker: widget.jodiMaker,
               selected: selected,
               style: style,
+              width: width,
             ),
 
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: height * 0.03,
             ),
             // TextFields
             Row(
@@ -187,10 +187,10 @@ class _DialogWidgetState extends State<DialogWidget> {
                   0,
                   valueA,
                 ),
-                const SizedBox(
-                  width: 20,
+                SizedBox(
+                  width: width * 0.01,
                 ),
-                if (jodiMaker)
+                if (widget.jodiMaker)
                   textField(
                     'VALUE B',
                     1,
@@ -198,8 +198,8 @@ class _DialogWidgetState extends State<DialogWidget> {
                   )
               ],
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: height * 0.03,
             ),
             // Points
             Row(
@@ -223,8 +223,8 @@ class _DialogWidgetState extends State<DialogWidget> {
                   'Calculate',
                   1,
                 ),
-                const SizedBox(
-                  width: 20,
+                SizedBox(
+                  width: width * 0.005,
                 ),
                 button(
                   'Close',
@@ -233,8 +233,8 @@ class _DialogWidgetState extends State<DialogWidget> {
               ],
             ),
 
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: height * 0.03,
             ),
 
             // Points and Value
@@ -243,17 +243,17 @@ class _DialogWidgetState extends State<DialogWidget> {
               children: [
                 Text(
                   'Total NO :   ${widget.totalNumbers}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: width * 0.011,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   '${widget.totalValue}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: width * 0.011,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

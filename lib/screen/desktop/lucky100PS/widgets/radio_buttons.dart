@@ -6,6 +6,7 @@ class RadioButton extends StatelessWidget {
   final selected;
   final changeSelected;
   final style;
+  final width;
   const RadioButton({
     super.key,
     this.combinedMaker,
@@ -13,6 +14,7 @@ class RadioButton extends StatelessWidget {
     this.selected,
     this.style,
     this.changeSelected,
+    this.width,
   });
 
   @override
@@ -35,8 +37,8 @@ class RadioButton extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(
-          width: 20,
+        SizedBox(
+          width: width * 0.001,
         ),
         Row(
           children: [
