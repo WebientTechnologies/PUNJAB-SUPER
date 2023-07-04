@@ -5,14 +5,8 @@ import "package:http/http.dart" as http;
 import '../../../../../utils/api_endpoints.dart';
 
 class PlaceBetController extends GetxController {
-  var betList = <Map<String, dynamic>>[].obs();
-  void addBet(Map<String, dynamic> bet) {
-    betList.add(bet);
-  }
-
   Future<int> betOkay(List combinations) async {
     String url = "$urlEndPoint/placeBet";
-    print(url);
     var body = {
       "agentId": "1234",
       "agentName": "Ishfaq",

@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
 import 'package:punjabsuper/screen/desktop/lucky100PS/controllers/get_winner_controller.dart';
+import 'package:punjabsuper/utils/toast.dart';
 import 'controllers/place_bet_controller.dart';
 import 'widgets/dialog_widget.dart';
 import '../../../widgets/counter.dart';
@@ -526,51 +526,9 @@ class _Lucky100PSState extends State<Lucky100PS> {
                       }
                       //Show Toast:
                       if (statusCode == 200) {
-                        showToastWidget(
-                          Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black,
-                              ),
-                              child: const Text(
-                                'Bet Placed Successfully',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              )),
-                          context: context,
-                          animation: StyledToastAnimation.slideFromBottom,
-                          reverseAnimation: StyledToastAnimation.slideToBottom,
-                          position: StyledToastPosition.bottom,
-                          animDuration: const Duration(seconds: 1),
-                          duration: const Duration(seconds: 4),
-                          curve: Curves.elasticOut,
-                          reverseCurve: Curves.fastOutSlowIn,
-                        );
+                        toast(context, 'Bet Placed Successfully');
                       } else {
-                        showToastWidget(
-                          Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black,
-                              ),
-                              child: const Text(
-                                'Bet Cannot be Placed',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              )),
-                          context: context,
-                          animation: StyledToastAnimation.slideFromBottom,
-                          reverseAnimation: StyledToastAnimation.slideToBottom,
-                          position: StyledToastPosition.bottom,
-                          animDuration: const Duration(seconds: 1),
-                          duration: const Duration(seconds: 4),
-                          curve: Curves.elasticOut,
-                          reverseCurve: Curves.fastOutSlowIn,
-                        );
+                        toast(context, 'Bet Could not be placed');
                       }
                     },
                     child: Image.asset(

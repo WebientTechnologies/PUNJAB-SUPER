@@ -22,11 +22,6 @@ class _MenuState extends State<Menu> {
   bool isLuckyPattaHovered = false;
   bool _value1 = false;
   bool _value2 = false;
-  // void changeMouseCursor() {
-  //   setState(() {
-  //     isBasicMouseCursor = !isBasicMouseCursor;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

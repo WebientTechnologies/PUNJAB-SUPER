@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:punjabsuper/screen/desktop/login/login.dart';
 import 'package:punjabsuper/screen/desktop/lucky100PS/lucy_100_PS.dart';
-import 'package:punjabsuper/screen/desktop/lucky_patta/licky_patta.dart';
+import 'package:punjabsuper/screen/desktop/lucky_patta/lucky_patta.dart';
 import 'package:punjabsuper/screen/desktop/menu/menu.dart';
 
 // Mobile Routes
@@ -28,7 +28,7 @@ class AppRoutes {
     GetPage(name: mobileLogin, page: () => mlogin.Login()),
     GetPage(name: menu, page: () => const Menu()),
     GetPage(name: mobileMenu, page: () => mMenu.Menu()),
-    GetPage(name: luckyPatta, page: () => LuckyPatt()),
+    GetPage(name: luckyPatta, page: () => LuckyPatty()),
     GetPage(name: mobileLuckyPatta, page: () => mLuckyPatta.LuckyPatt()),
     GetPage(name: lucky100PS, page: () => Lucky100PS()),
     GetPage(name: mobileLucky100PS, page: () => mLucky100PS.Lucky100PS()),
