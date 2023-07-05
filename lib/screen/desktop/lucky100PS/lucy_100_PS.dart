@@ -315,6 +315,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
     // print('Selected is $combinations, $totalNumbers, $totalValue');
     totalValue =
         combinations.fold(0, (prev, next) => prev + next['points'] as int);
+    // print('Combinations is $combinations');
     return Scaffold(
       body: LayoutBuilder(
         builder: (ctx, constrainsts) {

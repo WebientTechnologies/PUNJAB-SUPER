@@ -22,9 +22,9 @@ class GetWinnerController extends GetxController {
       );
 
       if (res.statusCode == 200) {
-        print(res.body);
+        // print(res.body);
         var value = json.decode(res.body)['result']['winningNumber'];
-        print(value);
+        // print(value);
         winner.value = value;
       }
     } catch (e) {
