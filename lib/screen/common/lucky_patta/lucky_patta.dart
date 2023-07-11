@@ -78,6 +78,8 @@ class LuckyPatty extends StatelessWidget {
     );
   }
 
+  void clear() {}
+
   // void addSelectedCardValueToList(
   //   int value,
   //   double x,
@@ -369,8 +371,9 @@ class LuckyPatty extends StatelessWidget {
                     left: width * 0.05,
                     top: height * 0.37,
                     child: Counter(
-                      startMinutes: 0,
-                      startSeconds: 20,
+                      startMinutes: 5,
+                      startSeconds: 0,
+                      clear: addCardsController.clear,
                       ratio: ratio,
                       style: TextStyle(
                         fontSize: width * 0.011,

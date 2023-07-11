@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: isMobile ? AppRoutes.mobileLogin : AppRoutes.login,
+      initialRoute: AppRoutes.login,
       getPages: AppRoutes.pages,
     );
   }

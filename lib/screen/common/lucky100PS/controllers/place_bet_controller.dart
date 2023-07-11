@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import "package:http/http.dart" as http;
-import "../../../../utils/api_endpoints.dart";
+import '../../../../utils/api_endpoints.dart';
 
 class PlaceBetController extends GetxController {
   var betList = <Map<String, dynamic>>[].obs();

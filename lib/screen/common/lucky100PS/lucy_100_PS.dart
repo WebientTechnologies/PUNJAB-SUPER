@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:punjabsuper/screen/desktop/lucky100PS/controllers/get_winner_controller.dart';
 import 'package:punjabsuper/utils/toast.dart';
 import 'controllers/place_bet_controller.dart';
 import 'widgets/dialog_widget.dart';
 import '../../../widgets/counter.dart';
+import 'controllers/get_winner_controller.dart';
 
 class Lucky100PS extends StatefulWidget {
   const Lucky100PS({super.key});
@@ -241,6 +241,13 @@ class _Lucky100PSState extends State<Lucky100PS> {
     }
   }
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void showCMJMDialog(bool value) {
     setState(() {
       showCMJM = value;
@@ -307,6 +314,14 @@ class _Lucky100PSState extends State<Lucky100PS> {
         ),
       ),
     );
+  }
+
+  void clear() {
+    setState(() {
+      combinations = [];
+      totalNumbers = 0;
+      totalValue = 0;
+    });
   }
 
   @override
@@ -426,6 +441,7 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     startMinutes: 5,
                     startSeconds: 0,
                     style: style,
+                    clear: clear,
                   ),
                 ),
 
@@ -827,8 +843,31 @@ class _Lucky100PSState extends State<Lucky100PS> {
                     ),
                   ),
 
-                // Showing total value at bottom left:
+                // Showing last 10 Winenrs:
+                Positioned(
+                  bottom: height * 0.14,
+                  right: width * 0.03,
+                  child: Obx(
+                    () => Row(
+                      children: winnerController.getLastWinnersList.value
+                          .map((e) => CircleAvatar(
+                                backgroundImage:
+                                    Image.asset("assets/img/blank.png").image,
+                                child: Text(
+                                  e.toString(),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: width * 0.015,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
 
+                // Showing total value at bottom left:
                 Positioned(
                     bottom: height * 0.015,
                     left: width * 0.03,

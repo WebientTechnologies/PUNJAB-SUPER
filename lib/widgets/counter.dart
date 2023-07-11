@@ -6,12 +6,14 @@ class Counter extends StatefulWidget {
   int startMinutes = 1;
   int startSeconds = 0;
   double ratio = 0.0;
+  final clear;
   final TextStyle style;
   Counter({
     super.key,
     this.startMinutes = 1,
     this.startSeconds = 0,
     this.ratio = 0.0,
+    this.clear,
     this.style = const TextStyle(
       color: Colors.black,
       fontSize: 12,
@@ -37,6 +39,7 @@ class _CounterState extends State<Counter> {
       (t) {
         if (startMinute == 0 && startSecond == 0) {
           _timer.cancel();
+          widget.clear();
           return;
         }
         if (startSecond == 0) {

@@ -28,4 +28,8 @@ class AddCardsController extends GetxController {
       cardsChosen[cardIndex] = card;
     }
   }
+
+  void clear() {
+    cardsChosen.clear();
+  }
 }
