@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:punjabsuper/screen/common/lucky100PS/controllers/add_numbers_controller.dart';
 import 'package:punjabsuper/utils/toast.dart';
 import 'controllers/place_bet_controller.dart';
 import 'widgets/dialog_widget.dart';
@@ -18,18 +19,23 @@ class Lucky100PS extends StatefulWidget {
 class _Lucky100PSState extends State<Lucky100PS> {
   bool showCMJM = false;
   final Random random = Random();
-  List<Map<String, dynamic>> combinations = [];
   double scaleFactor = 0.001;
   int value = 0;
   String points = '-1';
-  int totalNumbers = 0;
-  int totalValue = 0;
   String pressedNumber = '';
   bool combineMaker = true;
   bool jodiMaker = false;
 
-  var placeBetController = Get.put(PlaceBetController());
-  var winnerController = Get.put(GetWinnerController());
+  var placeBetController = Get.put(
+    PlaceBetController(),
+  );
+  var winnerController = Get.put(
+    GetWinnerController(),
+  );
+
+  var addNumberController = Get.put(
+    AddNumbersController(),
+  );
 
   Map coordinates = {
     // First Row:
@@ -177,70 +183,6 @@ class _Lucky100PSState extends State<Lucky100PS> {
     'B0': {'x': 0.545, 'y': 0.874},
   };
 
-  // Utility Functions
-
-  void calculateCombineMaker(valueA, points) {
-    if (valueA.isNotEmpty) {
-      var temp = valueA.split('');
-      combinations = [];
-      for (var i = 0; i < temp.length; i++) {
-        for (var j = 0; j < temp.length; j++) {
-          var number = temp[i] + temp[j];
-          int index = combinations.indexWhere((element) => element == number);
-          if (index == -1) {
-            combinations.add({
-              'number': number,
-              'points': int.parse(points),
-            });
-          } else {
-            combinations[index]['points'] += int.parse(points);
-          }
-        }
-      }
-      // showToast(combinations.toString());
-      // print(combinations);
-      if (points.isEmpty) {
-        points = '1';
-      }
-      this.points = points;
-      totalNumbers = combinations.length;
-      totalValue = int.parse(points) * totalNumbers;
-      setState(() {});
-    }
-  }
-
-  void calculateJodiMakers(valueA, valueB, points) {
-    if (valueA.isNotEmpty && valueB.isNotEmpty) {
-      var temp = valueA.split('');
-      var temp1 = valueB.split('');
-      combinations = [];
-      for (var i = 0; i < temp.length; i++) {
-        for (var j = 0; j < temp1.length; j++) {
-          var number = temp[i] + temp1[j];
-          int index = combinations.indexWhere((element) => element == number);
-          if (index == -1) {
-            combinations.add({
-              'number': number,
-              'points': int.parse(points),
-            });
-          } else {
-            combinations[index]['points'] += int.parse(points);
-          }
-        }
-      }
-      // showToast(combinations.toString());
-      if (points.isEmpty) {
-        points = '1';
-      }
-      // print(combinations);
-      this.points = points;
-      totalNumbers = combinations.length;
-      totalValue = int.parse(points) * totalNumbers;
-
-      setState(() {});
-    }
-  }
-
   @override
   void setState(fn) {
     if (mounted) {
@@ -258,8 +200,8 @@ class _Lucky100PSState extends State<Lucky100PS> {
       int index, String valueA, String valueB, points) {
     if (index == 1) {
       jodiMaker
-          ? calculateJodiMakers(valueA, valueB, points)
-          : calculateCombineMaker(valueA, points);
+          ? addNumberController.calculateJodiMakers(valueA, valueB, points)
+          : addNumberController.calculateCombineMaker(valueA, points);
     } else {
       showCMJMDialog(false);
     }
@@ -316,20 +258,13 @@ class _Lucky100PSState extends State<Lucky100PS> {
     );
   }
 
-  void clear() {
-    setState(() {
-      combinations = [];
-      totalNumbers = 0;
-      totalValue = 0;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // int num = random.nextInt(100);
     // print('Selected is $combinations, $totalNumbers, $totalValue');
-    totalValue =
-        combinations.fold(0, (prev, next) => prev + next['points'] as int);
+    // print("Valuea are ${winnerController.getLastWinnersList}");
+    addNumberController.totalValue.value = addNumberController.combinations
+        .fold(0, (prev, next) => prev + next['points'] as int);
     // print('Combinations is $combinations');
     return Scaffold(
       body: LayoutBuilder(
@@ -347,540 +282,542 @@ class _Lucky100PSState extends State<Lucky100PS> {
             fontSize: ratio * 9,
             fontWeight: FontWeight.bold,
           );
-          return InkWell(
-            onTapDown: (event) {
-              var x = event.globalPosition.dx;
-              var y = event.globalPosition.dy;
-              percentX = x / width;
-              percentY = y / height;
-              // print('Percent X is $percentX and Percent Y is $percentY');
-              // 01 : 0.013 and 0.086
-              var selectedKeys = [];
-              bool updated = false;
+          return Obx(
+            () {
+              addNumberController.totalValue.value;
+              // print(addNumberController.totalValue.value);
+              return InkWell(
+                onTapDown: (event) {
+                  var x = event.globalPosition.dx;
+                  var y = event.globalPosition.dy;
+                  percentX = x / width;
+                  percentY = y / height;
+                  // print('Percent X is $percentX and Percent Y is $percentY');
+                  // 01 : 0.013 and 0.086
+                  var selectedKeys = [];
+                  bool updated = false;
 
-              coordinates.forEach((key, value) {
-                if (value.containsKey('x') && value.containsKey('y')) {
-                  updated = true;
-                  if (percentX > value['x'] &&
-                      percentX < value['x'] + 0.086 &&
-                      percentY > value['y'] &&
-                      percentY < value['y'] + 0.086) {
-                    selectedKeys.add(key);
-                  }
-                }
-              });
-              if (!updated) {
-                return;
-              }
-              if (selectedKeys.isNotEmpty) {
-                pressedNumber = selectedKeys.last;
-              }
-              // print('Pressed Number is $pressedNumber');
-              if (points == '-1') {
-                return;
-              }
-              int index = combinations
-                  .indexWhere((element) => element['number'] == pressedNumber);
-              if (index == -1) {
-                combinations.add({
-                  'number': pressedNumber,
-                  'points': int.parse(points),
-                });
-              } else {
-                combinations[index]['points'] += int.parse(points);
-              }
-              setState(() {});
-            },
-            child: Stack(
-              children: [
-                SizedBox(
-                  child: Image.asset(
-                    'assets/img/SecondMatka.png',
-                    height: double.maxFinite,
-                    width: double.maxFinite,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-
-                ...combinations.map((e) {
-                  String number = e['number'];
-                  int value = e['points'];
-                  if (coordinates[number] != null) {
-                    if (coordinates[number].containsKey('x') &&
-                        coordinates[number].containsKey('y')) {
-                      return shadeNumber(
-                        number: number,
-                        value: value,
-                        rowConstant: coordinates[number]['x'],
-                        columnConstant: coordinates[number]['y'],
-                        height: height,
-                        width: width,
-                        ratio: ratio,
-                      );
+                  coordinates.forEach((key, value) {
+                    if (value.containsKey('x') && value.containsKey('y')) {
+                      updated = true;
+                      if (percentX > value['x'] &&
+                          percentX < value['x'] + 0.086 &&
+                          percentY > value['y'] &&
+                          percentY < value['y'] + 0.086) {
+                        selectedKeys.add(key);
+                      }
                     }
+                  });
+                  if (!updated) {
+                    return;
                   }
-                  return const SizedBox.shrink();
-                }).toList(),
-
-                // Score :
-                Positioned(
-                  top: height * 0.05,
-                  left: width * 0.05,
-                  child: Text(
-                    '803.00',
-                    style: style,
-                  ),
-                ),
-
-                // Counter:
-                Positioned(
-                  top: height * 0.05,
-                  left: width * 0.28,
-                  child: Counter(
-                    ratio: ratio,
-                    startMinutes: 5,
-                    startSeconds: 0,
-                    style: style,
-                    clear: clear,
-                  ),
-                ),
-
-                // Winner
-                Positioned(
-                  top: height * 0.05,
-                  left: width * 0.5,
-                  child: Text(
-                    '9',
-                    style: style,
-                  ),
-                ),
-
-                // Cancel button
-                Positioned(
-                  left: width * 0.6,
-                  top: height * 0.133,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      'assets/img/Cancel-Bet.png',
-                      height: height * 0.07,
-                      width: width * 0.1,
-                    ),
-                  ),
-                ),
-
-                // Cancel All button
-                Positioned(
-                  left: width * 0.6,
-                  top: height * 0.07,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      'assets/img/CancelAll.png',
-                      height: height * 0.07,
-                      width: width * 0.1,
-                    ),
-                  ),
-                ),
-
-                // Close button
-                Positioned(
-                  left: width * 0.65,
-                  top: height * 0.02,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      'assets/img/Close2.png',
-                      height: height * 0.05,
-                      width: width * 0.1,
-                    ),
-                  ),
-                ),
-
-                // Number Selector:
-
-                Obx(
-                  () => Positioned(
-                    right: width * 0.04,
-                    top: height * 0.03,
-                    child: Text(
-                      // num < 10 ? '0$num' : num.toString(),
-                      winnerController.winner.value.toString(),
-                      style: style.copyWith(
-                        fontSize: ratio * 40,
+                  if (selectedKeys.isNotEmpty) {
+                    pressedNumber = selectedKeys.last;
+                  }
+                  // print('Pressed Number is $pressedNumber');
+                  if (points == '-1') {
+                    return;
+                  }
+                  int index = addNumberController.combinations.indexWhere(
+                      (element) => element['number'] == pressedNumber);
+                  if (index == -1) {
+                    addNumberController.combinations.add({
+                      'number': pressedNumber,
+                      'points': int.parse(points),
+                    });
+                  } else {
+                    addNumberController.combinations[index]['points'] +=
+                        int.parse(points);
+                  }
+                  // setState(() {});
+                },
+                child: Obx(
+                  () => Stack(
+                    children: [
+                      SizedBox(
+                        child: Image.asset(
+                          'assets/img/SecondMatka.png',
+                          height: double.maxFinite,
+                          width: double.maxFinite,
+                          fit: BoxFit.fill,
+                        ),
                       ),
-                    ),
-                  ),
-                ),
 
-                // Take Button
-                Positioned(
-                  right: width * 0.257,
-                  bottom: height * 0.08,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      'assets/img/Take.png',
-                      height: height * 0.0499,
-                      width: width * 0.15,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
+                      ...addNumberController.combinations.map((e) {
+                        String number = e['number'];
+                        int value = e['points'];
+                        if (coordinates[number] != null) {
+                          if (coordinates[number].containsKey('x') &&
+                              coordinates[number].containsKey('y')) {
+                            return shadeNumber(
+                              number: number,
+                              value: value,
+                              rowConstant: coordinates[number]['x'],
+                              columnConstant: coordinates[number]['y'],
+                              height: height,
+                              width: width,
+                              ratio: ratio,
+                            );
+                          }
+                        }
+                        return const SizedBox.shrink();
+                      }).toList(),
 
-                // Bet Ok Button
-                Positioned(
-                  right: 0,
-                  bottom: height * 0.08,
-                  child: InkWell(
-                    onTap: () async {
-                      var statusCode = -1;
-                      if (combinations.isEmpty) {
-                        return;
-                      } else {
-                        statusCode =
-                            await placeBetController.betOkay(combinations);
-                      }
-                      //Show Toast:
-                      if (statusCode == 200) {
-                        toast(context, 'Bet Placed Successfully');
-                      } else {
-                        toast(context, 'Bet Could not be placed');
-                      }
-                    },
-                    child: Image.asset(
-                      'assets/img/BetOk.png',
-                      height: height * 0.0499,
-                      width: width * 0.15,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-
-                // Exit Button
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: InkWell(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Image.asset(
-                      'assets/img/Exit 2.png',
-                      height: height * 0.0499,
-                      width: width * 0.085,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-
-                // Placing Black Container:
-                Positioned(
-                  bottom: height * 0.19,
-                  right: width * 0.005,
-                  child: Container(
-                    height: height * 0.28,
-                    width: width * 0.3,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-
-                // Placing Coins:
-                // Coin 1
-                Positioned(
-                  bottom: height * 0.34,
-                  right: width * 0.225,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      // hoverColor: Colors.amber,
-                      onTap: () {
-                        setState(() {
-                          points = '1';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin1Glow.jpg',
-                        ).image,
+                      // Score :
+                      Positioned(
+                        top: height * 0.05,
+                        left: width * 0.05,
+                        child: Text(
+                          '803.00',
+                          style: style,
+                        ),
                       ),
-                    ),
+
+                      // Counter:
+                      Positioned(
+                        top: height * 0.05,
+                        left: width * 0.28,
+                        child: Counter(
+                          ratio: ratio,
+                          startMinutes: addNumberController.minutes.value,
+                          startSeconds: addNumberController.seconds.value,
+                          style: style,
+                          clear: addNumberController.clear,
+                          type: 0,
+                        ),
+                      ),
+
+                      // Winner
+                      Positioned(
+                        top: height * 0.05,
+                        left: width * 0.5,
+                        child: Text(
+                          '9',
+                          style: style,
+                        ),
+                      ),
+
+                      // Cancel button
+                      Positioned(
+                        left: width * 0.6,
+                        top: height * 0.133,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/img/Cancel-Bet.png',
+                            height: height * 0.07,
+                            width: width * 0.1,
+                          ),
+                        ),
+                      ),
+
+                      // Cancel All button
+                      Positioned(
+                        left: width * 0.6,
+                        top: height * 0.07,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/img/CancelAll.png',
+                            height: height * 0.07,
+                            width: width * 0.1,
+                          ),
+                        ),
+                      ),
+
+                      // Close button
+                      Positioned(
+                        left: width * 0.65,
+                        top: height * 0.02,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/img/Close2.png',
+                            height: height * 0.05,
+                            width: width * 0.1,
+                          ),
+                        ),
+                      ),
+
+                      // Number Selector:
+                      Positioned(
+                        right: width * 0.04,
+                        top: height * 0.03,
+                        child: Text(
+                          // num < 10 ? '0$num' : num.toString(),
+                          winnerController.winner.value.toString(),
+                          style: style.copyWith(
+                            fontSize: ratio * 40,
+                          ),
+                        ),
+                      ),
+
+                      // Take Button
+                      Positioned(
+                        right: width * 0.257,
+                        bottom: height * 0.08,
+                        child: InkWell(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/img/Take.png',
+                            height: height * 0.0499,
+                            width: width * 0.15,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+
+                      // Bet Ok Button
+                      Positioned(
+                        right: 0,
+                        bottom: height * 0.08,
+                        child: InkWell(
+                          onTap: () async {
+                            var statusCode = -1;
+                            if (addNumberController.combinations.isEmpty) {
+                              return;
+                            } else {
+                              statusCode = await placeBetController
+                                  .betOkay(addNumberController.combinations);
+                            }
+                            //Show Toast:
+                            if (statusCode == 200) {
+                              toast(context, 'Bet Placed Successfully');
+                            } else {
+                              toast(context, 'Bet Could not be placed');
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/img/BetOk.png',
+                            height: height * 0.0499,
+                            width: width * 0.15,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+
+                      // Exit Button
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: InkWell(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Image.asset(
+                            'assets/img/Exit 2.png',
+                            height: height * 0.0499,
+                            width: width * 0.085,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+
+                      // Placing Black Container:
+                      Positioned(
+                        bottom: height * 0.19,
+                        right: width * 0.005,
+                        child: Container(
+                          height: height * 0.28,
+                          width: width * 0.3,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+
+                      // Placing Coins:
+                      // Coin 1
+                      Positioned(
+                        bottom: height * 0.34,
+                        right: width * 0.225,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            // hoverColor: Colors.amber,
+                            onTap: () {
+                              setState(() {
+                                points = '1';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin1Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 5
+                      Positioned(
+                        bottom: height * 0.34,
+                        right: width * 0.15,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '5';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin5Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 10
+                      Positioned(
+                        bottom: height * 0.34,
+                        right: width * 0.08,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '10';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin10Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 50
+                      Positioned(
+                        bottom: height * 0.34,
+                        right: width * 0.01,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '50';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin50Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 100
+                      Positioned(
+                        bottom: height * 0.23,
+                        right: width * 0.22,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '100';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin100Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 500
+                      Positioned(
+                        bottom: height * 0.23,
+                        right: width * 0.15,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '500';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin500Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Coin 1000
+                      Positioned(
+                        bottom: height * 0.23,
+                        right: width * 0.08,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '1000';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin1000Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Coin 5000
+                      Positioned(
+                        bottom: height * 0.23,
+                        right: width * 0.01,
+                        child: Material(
+                          borderRadius: BorderRadius.circular(100),
+                          elevation: 20,
+                          shadowColor: Colors.white,
+                          color: Colors.black,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                points = '5000';
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: ratio * 26,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.asset(
+                                'assets/img/Coin5000Glow.jpg',
+                              ).image,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // CM/JM Button
+                      Positioned(
+                        right: width * 0.3,
+                        bottom: height * 0.3,
+                        child: InkWell(
+                          onTap: () {
+                            showCMJMDialog(!showCMJM);
+                          },
+                          child: Image.asset(
+                            'assets/img/CM:JM.png',
+                            height: height * 0.05,
+                            width: width * 0.1,
+                          ),
+                        ),
+                      ),
+
+                      // CM/JM Dialog
+                      if (showCMJM)
+                        Positioned(
+                          right: 0,
+                          bottom: height * 0.35,
+                          child: Dialog(
+                            backgroundColor: Colors.transparent,
+                            elevation: 10.0,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: DialogWidget(
+                              height: height,
+                              width: width,
+                              ratio: ratio,
+                              showCMJMDialog: showCMJMDialog,
+                              changeJodiMakerCombineMaker:
+                                  changeJodiMakerCombineMaker,
+                              combineMaker: combineMaker,
+                              jodiMaker: jodiMaker,
+                              changeSelected: changeSelected,
+                            ),
+                          ),
+                        ),
+
+                      // Showing last 10 Winenrs:
+                      Positioned(
+                        bottom: height * 0.14,
+                        right: width * 0.03,
+                        child: Row(
+                          children: winnerController.getLastWinnersList.value
+                              .map((e) => CircleAvatar(
+                                    backgroundImage:
+                                        Image.asset("assets/img/blank.png")
+                                            .image,
+                                    child: Text(
+                                      e.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: width * 0.015,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+
+                      // Showing total value at bottom left:
+                      Positioned(
+                          bottom: height * 0.015,
+                          left: width * 0.03,
+                          child: Text(
+                            addNumberController.totalValue.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: width * 0.011,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ))
+                    ],
                   ),
                 ),
-
-                // Coin 5
-                Positioned(
-                  bottom: height * 0.34,
-                  right: width * 0.15,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '5';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin5Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Coin 10
-                Positioned(
-                  bottom: height * 0.34,
-                  right: width * 0.08,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '10';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin10Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Coin 50
-                Positioned(
-                  bottom: height * 0.34,
-                  right: width * 0.01,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '50';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin50Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Coin 100
-                Positioned(
-                  bottom: height * 0.23,
-                  right: width * 0.22,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '100';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin100Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Coin 500
-                Positioned(
-                  bottom: height * 0.23,
-                  right: width * 0.15,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '500';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin500Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-                // Coin 1000
-                Positioned(
-                  bottom: height * 0.23,
-                  right: width * 0.08,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '1000';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin1000Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Coin 5000
-                Positioned(
-                  bottom: height * 0.23,
-                  right: width * 0.01,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(100),
-                    elevation: 20,
-                    shadowColor: Colors.white,
-                    color: Colors.black,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          points = '5000';
-                        });
-                      },
-                      child: CircleAvatar(
-                        radius: ratio * 26,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: Image.asset(
-                          'assets/img/Coin5000Glow.jpg',
-                        ).image,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // CM/JM Button
-                Positioned(
-                  right: width * 0.3,
-                  bottom: height * 0.3,
-                  child: InkWell(
-                    onTap: () {
-                      showCMJMDialog(!showCMJM);
-                    },
-                    child: Image.asset(
-                      'assets/img/CM:JM.png',
-                      height: height * 0.05,
-                      width: width * 0.1,
-                    ),
-                  ),
-                ),
-
-                // CM/JM Dialog
-                if (showCMJM)
-                  Positioned(
-                    right: 0,
-                    bottom: height * 0.35,
-                    child: Dialog(
-                      backgroundColor: Colors.transparent,
-                      elevation: 10.0,
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: DialogWidget(
-                        height: height,
-                        width: width,
-                        ratio: ratio,
-                        calculateCombineMaker: calculateCombineMaker,
-                        calculateJodiMakers: calculateJodiMakers,
-                        showCMJMDialog: showCMJMDialog,
-                        totalNumbers: totalNumbers,
-                        totalValue: totalValue,
-                        changeJodiMakerCombineMaker:
-                            changeJodiMakerCombineMaker,
-                        combineMaker: combineMaker,
-                        jodiMaker: jodiMaker,
-                        changeSelected: changeSelected,
-                      ),
-                    ),
-                  ),
-
-                // Showing last 10 Winenrs:
-                Positioned(
-                  bottom: height * 0.14,
-                  right: width * 0.03,
-                  child: Obx(
-                    () => Row(
-                      children: winnerController.getLastWinnersList.value
-                          .map((e) => CircleAvatar(
-                                backgroundImage:
-                                    Image.asset("assets/img/blank.png").image,
-                                child: Text(
-                                  e.toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: width * 0.015,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-
-                // Showing total value at bottom left:
-                Positioned(
-                    bottom: height * 0.015,
-                    left: width * 0.03,
-                    child: Text(
-                      totalValue.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: width * 0.011,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ))
-              ],
-            ),
+              );
+            },
           );
         },
       ),

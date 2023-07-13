@@ -5,6 +5,8 @@ class AddNumbersController extends GetxController {
   var points = 0.obs;
   var totalNumbers = 0.obs;
   var totalValue = 0.obs;
+  var minutes = 5.obs;
+  var seconds = 0.obs;
 
   void calculateCombineMaker(valueA, points) {
     if (valueA.isNotEmpty) {
@@ -29,13 +31,14 @@ class AddNumbersController extends GetxController {
       if (points.isEmpty) {
         points = '1';
       }
-      this.points = points;
-      totalNumbers.value = combinations.value.length;
-      totalValue.value = int.parse(points.value) * totalNumbers.value;
+      this.points.value = int.parse(points);
+      totalNumbers.value = combinations.length;
+      totalValue.value = int.parse(points) * totalNumbers.value;
     }
   }
 
   void calculateJodiMakers(valueA, valueB, points) {
+    print("Calcculate Jodi Makers");
     if (valueA.isNotEmpty && valueB.isNotEmpty) {
       var temp = valueA.split('');
       var temp1 = valueB.split('');
@@ -59,9 +62,29 @@ class AddNumbersController extends GetxController {
         points = '1';
       }
       // print(combinations);
-      this.points.value = points;
+      this.points.value = int.parse(points);
       totalNumbers.value = combinations.length;
-      totalValue.value = int.parse(points.value) * totalNumbers.value;
+      totalValue.value = int.parse(points) * totalNumbers.value;
     }
+    print(combinations);
+  }
+
+  // void changeJodiMakerCombineMaker(
+  //     int index, String valueA, String valueB, points) {
+  //   if (index == 1) {
+  //     jodiMaker
+  //         ? addNumberController.calculateJodiMakers(valueA, valueB, points)
+  //         : addNumberController.calculateCombineMaker(valueA, points);
+  //   } else {
+  //     showCMJMDialog(false);
+  //   }
+  // }
+
+  void clear() {
+    combinations.value = [];
+    totalNumbers.value = 0;
+    totalValue.value = 0;
+    minutes.value = 5;
+    seconds.value = 0;
   }
 }

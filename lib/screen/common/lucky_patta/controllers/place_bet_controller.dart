@@ -13,6 +13,7 @@ class PlaceBetController extends GetxController {
       "token": "123445",
       "betId": "abcdefrg",
       "numbersChosen": combinations,
+      "betType": 1,
     };
     try {
       var res = await http.post(

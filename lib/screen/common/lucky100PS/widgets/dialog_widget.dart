@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/add_numbers_controller.dart';
 import 'radio_buttons.dart';
 
 class DialogWidget extends StatefulWidget {
   final height;
   final width;
   final ratio;
-  final calculateCombineMaker;
-  final calculateJodiMakers;
   final showCMJMDialog;
-  final totalNumbers;
-  final totalValue;
   final jodiMaker;
   final combineMaker;
   final changeJodiMakerCombineMaker;
@@ -19,11 +17,7 @@ class DialogWidget extends StatefulWidget {
     this.height,
     this.width,
     this.ratio,
-    this.calculateCombineMaker,
-    this.calculateJodiMakers,
     this.showCMJMDialog,
-    this.totalNumbers,
-    this.totalValue,
     this.jodiMaker,
     this.combineMaker,
     this.changeJodiMakerCombineMaker,
@@ -40,6 +34,8 @@ class _DialogWidgetState extends State<DialogWidget> {
   String valueB = '';
   String points = '';
   TextStyle style = const TextStyle();
+
+  var addNumberController = Get.find<AddNumbersController>();
 
   Widget textField(String label, index, value) {
     return Row(
@@ -242,7 +238,7 @@ class _DialogWidgetState extends State<DialogWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total NO :   ${widget.totalNumbers}',
+                  'Total NO :   ${addNumberController.totalNumbers.value}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: width * 0.011,
@@ -250,7 +246,7 @@ class _DialogWidgetState extends State<DialogWidget> {
                   ),
                 ),
                 Text(
-                  '${widget.totalValue}',
+                  '${addNumberController.totalValue.value}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: width * 0.011,

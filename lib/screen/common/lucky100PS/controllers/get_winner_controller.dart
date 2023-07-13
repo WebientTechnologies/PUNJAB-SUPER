@@ -31,48 +31,51 @@ class GetWinnerController extends GetxController {
         // print(res.body);
         var result = json.decode(res.body)['result'];
         for (var i in result) {
-          getLastWinnersList.value.add(i['winningNumber']);
+          getLastWinnersList.add(i['winningNumber']);
         }
       }
-      print(getLastWinnersList.value);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void getWinner({String betId = "abcdefrg", required int betType}) async {
-    String url = "$urlEndPoint/getWinner";
-    var body = {
-      "betId": betId,
-      "betType": betType,
-    };
-    try {
-      var res = await http.post(
-        Uri.parse(url),
-        body: json.encode(body),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-      );
-
-      if (res.statusCode == 200) {
-        // print(res.body);
-        var value = json.decode(res.body)['result']['winningNumber'];
-        // print(value);
-        winner.value = value;
+      print(getLastWinnersList);
+      if (getLastWinnersList.isNotEmpty) {
+        winner.value = getLastWinnersList[0];
       }
     } catch (e) {
       print(e);
     }
   }
+
+  // void getWinner({String betId = "10", required int betType}) async {
+  //   String url = "$urlEndPoint/getWinner";
+  //   var body = {
+  //     "betId": betId,
+  //     "betType": betType,
+  //   };
+  //   try {
+  //     var res = await http.post(
+  //       Uri.parse(url),
+  //       body: json.encode(body),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Accept": "application/json",
+  //       },
+  //     );
+
+  //     if (res.statusCode == 200) {
+  //       // print(res.body);
+  //       var value = json.decode(res.body)['result']['winningNumber'];
+  //       // print(value);
+  //       winner.value = value;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   @override
   void onInit() {
     super.onInit();
-    getWinner(
-      betType: 0,
-    );
+    // getWinner(
+    //   betType: 0,
+    // );
 
     getLastWinners(
       betType: 0,

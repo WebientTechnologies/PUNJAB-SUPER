@@ -16,8 +16,9 @@ class PlaceBetController extends GetxController {
       "agentId": "1234",
       "agentName": "Ishfaq",
       "token": "123445",
-      "betId": "abcdefrg",
+      "betId": "10",
       "numbersChosen": combinations,
+      "betType": 0,
     };
     try {
       var res = await http.post(

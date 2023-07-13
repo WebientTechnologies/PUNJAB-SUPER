@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:punjabsuper/screen/common/lucky100PS/controllers/add_numbers_controller.dart';
+import 'package:punjabsuper/screen/common/lucky_patta/controllers/add_cards_controller.dart';
 
 class Counter extends StatefulWidget {
   int startMinutes = 1;
@@ -8,12 +11,14 @@ class Counter extends StatefulWidget {
   double ratio = 0.0;
   final clear;
   final TextStyle style;
+  final type;
   Counter({
     super.key,
     this.startMinutes = 1,
     this.startSeconds = 0,
     this.ratio = 0.0,
     this.clear,
+    this.type = 0,
     this.style = const TextStyle(
       color: Colors.black,
       fontSize: 12,
@@ -30,6 +35,8 @@ class _CounterState extends State<Counter> {
   int startSecond = 0;
   final StreamController _streamController = StreamController<List>();
   late Timer _timer;
+  var addCardsController;
+  var addNumbersController;
   void timer({
     int startMinute = 1,
     int startSecond = 0,
@@ -37,6 +44,9 @@ class _CounterState extends State<Counter> {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (t) {
+        if (widget.type == 1) {
+          addCardsController.decrementTimer();
+        }
         if (startMinute == 0 && startSecond == 0) {
           _timer.cancel();
           widget.clear();
@@ -65,6 +75,13 @@ class _CounterState extends State<Counter> {
   @override
   void initState() {
     super.initState();
+
+    if (widget.type == 1) {
+      addCardsController = Get.find<AddCardsController>();
+    } else if (widget.type == 0) {
+      addNumbersController = Get.find<AddNumbersController>();
+    }
+
     startMinute = widget.startMinutes;
     startSecond = widget.startSeconds;
     timer(
